@@ -1,0 +1,38 @@
+{% extends "_base/base.html" %}
+{% block title %}Engage{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block subsection_title %}Select Engagement Screen{% endblock %}
+{% block content %}
+
+<div class="w3-left" id="content">
+<form id="form" method="post">
+    <table>
+        <tr>
+            <td>Hierarchy</td>
+            <td>
+                <select name="hierarchy">
+                    {% for h in floors %}
+                        {% if h.vertical_name %}
+                            <option value="" disabled>{{ h.vertical_name }}</option>
+                                {% for z in h.zones %}
+                                <option value="{{ z.get_hierarchy() }}">>> {{ z.vertical_name }}</option>
+                                {% endfor %}
+                        {%else%}
+                            <option value="" disabled>{{ h.name }}</option>
+                                {% for z in h.zones %}
+                                <option value="{{ z.get_hierarchy() }}">>> {{ z.name }}</option>
+                                {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit"/></td>
+        </tr>
+	</table>
+</form>
+</div>
+{% endblock %}

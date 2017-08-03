@@ -1,0 +1,16 @@
+{% extends "_base/base.html" %}
+{% block title %}User Engagement{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block subsection_title %}Engage With Clients{% endblock %}
+{% block content %}
+
+<div>
+    <ul>
+        <li><a href="{{url_for('mod_engagement.engagement_screen_select')}}">Engagement Screens</a></li>
+        <li><a href="{{url_for('mod_engagement.engagement_trigger_list')}}">Engagement Triggers</a></li>
+        <li><a href="{{url_for('mod_engagement.engagement_screen_dwell_select')}}">Dwell Time Screen</a></li>
+    </ul>
+</div>
+{% endblock %}

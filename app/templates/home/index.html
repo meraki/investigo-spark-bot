@@ -1,0 +1,21 @@
+{% extends "_base/base.html" %}
+{% block title %}Home{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+
+{% block subsection_title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="w3-left">
+<p><b>Investigo</b> is Latin for <i>track or trace out, investigate</i>. The CMX Investigo is a bot for Spark, Cisco's unified communications service, which enables customers to use wireless infrastructure to locate Wi-Fi capable assets.</p>
+<p>The Investigo is a mash-up bot that uses several solutions: Spark, Tropo, CMX, spanning from the enterprise to the Internet of Things world.</p>
+
+
+
+
+
+
+
+</div>
+<embed src="{{url_for('static', filename='presentation/CMX + Spark.pdf')}}" width="100%" height="600px" alt="pdf" pluginspage="http://www.adobe.com/products/acrobat/readstep2.html">
+{% endblock %}

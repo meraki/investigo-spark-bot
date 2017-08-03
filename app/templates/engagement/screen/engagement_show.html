@@ -1,0 +1,314 @@
+{% extends "_base/base.html" %}
+{% block title %}Engagement Screen{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block content %}
+<script type="text/javascript" charset="utf-8">
+    var triggers = {{triggers|tojson|safe}}
+    console.log(triggers);
+
+    function fireAnyTrigger(user, event) {
+        console.log('fireAnyTrigger');
+
+         for (var i = 0; i < triggers.length; i++) {
+            t = triggers[i];
+            console.log(t);
+            /*
+            for (var j = 0; i < users.length; j++) {
+                user = users[j];
+                if (t.registered_user_id == user.id) {
+                    requestTriggerFire(t.id);
+                }
+            */
+            console.log(t.registered_user_id);
+            console.log(user.user_info.id);
+            console.log(t.event);
+            console.log(event);
+            if (t.registered_user_id == user.user_info.id && t.event == event) {
+                requestTriggerFire(t.id);
+            }
+        }
+    }
+
+    function requestTriggerFire(triggerId) {
+        console.log('Firing trigger ' + triggerId);
+
+        data = {
+            'trigger_id': triggerId
+        }
+
+        data = JSON.stringify(data)
+
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('mod_engagement.fire_user_zone_trigger')}}",
+            data: data,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(msg){
+                if (!msg.error) {
+                    console.log('Trigger fired successfully');
+                } else {
+                    console.log(msg.error_message);
+                }
+            },
+            fail: function(msg) {
+                console.log(msg)
+            }
+        });
+    }
+
+</script>
+
+
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+    var expirationWhenIdle = 5;
+    var expirationWhenEngaging = 10;
+
+    var expiration = expirationWhenIdle; //seconds
+
+    var time = expiration;
+
+    var IntID;
+    function startTimer() {
+        //console.log('Starting timer');
+        i = setInterval( function() {
+
+            time--;
+            if (time === 0) {
+                makeRequest();
+                time = expiration
+            }
+            updateTimer(time);
+        }, 1000);
+        return i;
+    }
+
+    function stopTimer() {
+        //console.log('Stopping timer: ' + IntID);
+        clearInterval(IntID);
+    }
+
+    function updateTimer(time) {
+        $('#countdown').html(time);
+    }
+    updateTimer(time)
+    $("form").submit(function( event ) {
+          event.preventDefault();
+          var btn = $('#timerTrigger');
+          var btnVal = btn.val()
+
+          var newVal;
+          if (btnVal === 'Stop') {
+            newVal = 'Start';
+            stopTimer();
+
+          } else {
+            newVal = 'Stop';
+            IntID = startTimer();
+          }
+          btn.val(newVal);
+          $('#countdownContainer').toggle();
+
+    });
+
+    function showLoading() {
+        //$('#loading').show();
+    }
+
+    function hideLoading(){
+        //$('#loading').hide();
+    }
+    function makeRequest() {
+      $.ajax({
+           type: "GET",
+           url: "{{url_for('mod_api.clients_hierarchy', hierarchy=hierarchy)}}",
+           data: {},
+           beforeSend: function(){
+             showLoading();
+           },
+           complete: function(){
+             hideLoading();
+           },
+           success: function(msg){
+             time = expiration;
+             processData(msg)
+           },
+           fail: function(msg) {
+             alert("Error when getting update");
+             periodicRefresh = false;
+           }
+        });
+    }
+
+    var userBeingEngaged = null;
+
+    function processData(msg) {
+        if (!msg.error) {
+            var users = msg.items.registered_users
+            var userCount = users.length
+            $('#user_count').html(userCount);
+            var output = 'error';
+            if (userCount === 0) {
+                if (!userBeingEngaged) {
+                    output = 'nothing to do... no users were here and no users arrived'
+                    updateScreen(null, null);
+                } else {
+                    output = 'a user was here and now he / she left. say goodbye'
+                    fireAnyTrigger(userBeingEngaged, 'out');
+                    updateScreen(null, userBeingEngaged);
+                    userBeingEngaged = null;
+                }
+            } else {
+                var sameUser = false;
+                var newUser = null;
+                if (userBeingEngaged) {
+                    for (var i = 0; i < userCount; i++) {
+                        u = users[i];
+                        if (userBeingEngaged.mac_address === u.mac_address) {
+                            sameUser = true;
+                            break;
+                        }
+                    }
+                    if (sameUser) {
+                        newUser = userBeingEngaged;
+                        output = 'User is still here... do nothing: ' + newUser.user_info.name + " (" + newUser.mac_address + ")";
+                    } else {
+                        newUser = users[0];
+                        output = 'say goodbye to currentUser: ' + userBeingEngaged.user_info.name + " (" + userBeingEngaged.mac_address + ") and welcome new user: " + newUser.user_info.name + " (" + newUser.mac_address + ")"
+                        fireAnyTrigger(userBeingEngaged, 'out');
+                        fireAnyTrigger(newUser, 'in');
+
+                        updateScreen(newUser, userBeingEngaged);
+
+                    }
+                } else {
+                    newUser = users[0]
+                    output = 'screen was idle and now there is an user: ' + newUser.user_info.name + " (" + newUser.mac_address + ")";
+                    console.log(newUser);
+                    fireAnyTrigger(newUser, 'in');
+                    updateScreen(newUser, null);
+                }
+
+                userBeingEngaged = newUser;
+
+            }
+
+            console.log(output);
+
+            if (userBeingEngaged) {
+                expiration = expirationWhenEngaging;
+            } else {
+                expiration = expirationWhenIdle;
+            }
+
+        } else {
+            showErrorMessage(msg.error);
+        }
+    }
+
+    var isScreenActive = false;
+
+
+    function updateScreen(newUser, userLeaving){
+
+        var status = '';
+        if (!newUser && !userLeaving) {
+            if (!isScreenActive) {
+                status = 'screen was idle and will remain so';
+            } else {
+                status = 'screen was active and now will go idle';
+            }
+            isScreenActive = false;
+         } else {
+            isScreenActive = true;
+            if (userLeaving) {
+                sayGoodbye(userLeaving);
+                status = 'screen was active... will say goodbye';
+            } else {
+                status = 'screen was idle and now there is a new user';
+                sayHello(newUser);
+            }
+         }
+
+         if (isScreenActive) {
+            $('#show-when-present').show();
+            $('#show-when-absent').hide();
+         } else {
+            $('#show-when-present').hide();
+            $('#show-when-absent').show();
+         }
+         console.log(status);
+    }
+
+    function sayHello(user) {
+        $('.user-name').text(user.user_info.name);
+        $('#hello').slideDown()
+        $('#goodbye').hide();
+    }
+
+    function sayGoodbye (newUser, userLeaving) {
+        $('#hello').hide()
+        $('#goodbye').slideDown();
+        console.log('saying goodbye to' + userLeaving);
+        var interval = setInterval( function() {
+            console.log('userLeaving');
+            if (newUser) {
+                sayHello(newUser);
+            } else {
+            }
+            $('#goodbye').slideUp();
+        }, 5000);
+
+        clearInterval(interval)
+
+    }
+
+    $(document).on('click', '#timerTrigger', function(){
+			time = 1;
+			updateTimer(time);
+	    });
+    $('#timerTrigger').click();
+});
+</script>
+<div class="w3-container w3-right">
+    <div class='w3-left hidden' id="countdownContainer">
+        <span>Reloading in ...</span>
+        <span id="countdown"></span>
+    </div>
+    <div class='w3-left hidden'  id="loading" style="display:none">
+        <img src="{{url_for('static', filename='img/loading.gif')}}" style="max-width:10%"/>
+    </div>
+    <form>
+        <input type="submit" value="Start" id="timerTrigger" />
+    </form>
+</div>
+<div class="w3-header">
+    {% if vertical_hierarchy %}
+        <h3>Welcome to {{vertical_hierarchy}}</h3>
+    {% else %}
+        <h3>Welcome to {{hierarchy}}</h3>
+    {% endif %}
+</div>
+<div id="show-when-absent" class="w3-container">
+    <h3>Idle Screen</h3>
+    <h3>Customize!</h3>
+</div>
+
+<div id="show-when-present" class="w3-container">
+    <h5><span id="user_count"></span> users around</h5>
+    <div id="hello">
+        <h2>Hello, <span class="user-name"></span></h2>
+        <h3>We are glad to see you here</h3>
+        <h3>Customize screen with user content!</h3>
+    </div>
+    <div id="goodbye">
+        <h2>Goodbye, <span class="user-name"></span></h2>
+        <h3>It was nice to see you here!</h3>
+    </div>
+</div>
+
+
+
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "_base/base.html" %}
+{% block title %}Registered Users{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}Registered Users{% endblock %}
+{% block subsection_subtitle %}{{object|length}} Users{% endblock %}
+{% block content %}
+<div class="w3-left">
+    <a class="w3-center" href="{{url_for('mod_user.add')}}">Add a new User</a>
+</div>
+<div class="w3-left">
+
+    {% if object|length > 0%}
+        <ol>
+        {% for item in object %}
+            <li>{{ item.name }} ({{item.mac_address}}) | <a href="{{url_for('mod_monitor.device_show', mac=item.mac_address)}}">track</a> | <a href="{{url_for('mod_user.details', id=item.id)}}">details</a> | <a href="{{url_for('mod_user.edit', id=item.id)}}">edit</a> | <a href="{{url_for('mod_user.delete', id=item.id)}}">delete</a></li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+</div>
+{% endblock %}

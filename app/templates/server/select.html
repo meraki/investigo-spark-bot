@@ -1,0 +1,9 @@
+{% extends "_base/base.html" %}
+{% block title %}Deployment Selection{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}Select your deployment{% endblock %}
+{% block content %}
+<p><a href="{{url_for('mod_cmx_server.show')}}">On-premises (CMX)</a></p>
+<p><a href="#">Cloud (Meraki)</a></p>
+{% endblock %}

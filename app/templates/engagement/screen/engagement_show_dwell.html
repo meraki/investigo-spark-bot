@@ -1,0 +1,300 @@
+{% extends "_base/base.html" %}
+{% block title %}Engagement Screen{% endblock %}
+{% block style %}
+<style>
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+.not_compliant {
+    color: red;
+}
+
+
+tr:nth-child(even){background-color: #f2f2f2}
+</style>
+
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" charset="utf-8">
+    function requestTriggerFire(user_id) {
+        console.log('Firing trigger for ' + user_id);
+
+        data = {
+            'user_id': user_id,
+            'hierarchy' : "{{hierarchy}}",
+            'hierarchy_vertical_name': "{{vertical_hierarchy}}"
+        }
+
+        data = JSON.stringify(data)
+
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('mod_engagement.fire_exceeded_dwell_time')}}",
+            data: data,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(msg){
+                if (!msg.error) {
+                    console.log('Trigger fired successfully');
+                } else {
+                    console.log(msg.error_message);
+                }
+            },
+            fail: function(msg) {
+                console.log(msg)
+            }
+        });
+    }
+</script>
+<script type="text/javascript" charset="utf-8">
+$(document).ready(function() {
+
+
+     function formatDate(date) {
+          var hours = date.getHours();
+          var minutes = date.getMinutes();
+          var ampm = hours >= 12 ? 'pm' : 'am';
+          hours = hours % 12;
+          hours = hours ? hours : 12; // the hour '0' should be '12'
+          minutes = minutes < 10 ? '0'+minutes : minutes;
+          var strTime = hours + ':' + minutes + ' ' + ampm;
+          return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
+     }
+
+     String.prototype.replaceAll = function(search, replacement) {
+        var target = this;
+        return target.split(search).join(replacement);
+    };
+
+
+
+    var expiration = 5; //seconds
+
+    var time = expiration;
+
+    var IntID;
+    function startTimer() {
+        //console.log('Starting timer');
+        i = setInterval( function() {
+
+            time--;
+            if (time === 0) {
+                makeRequest();
+                time = expiration
+            }
+            updateTimer(time);
+        }, 1000);
+        return i;
+    }
+
+    function stopTimer() {
+        //console.log('Stopping timer: ' + IntID);
+        clearInterval(IntID);
+    }
+
+    function updateTimer(time) {
+        $('#countdown').html(time);
+    }
+
+    updateTimer(time);
+
+    $("form").submit(function( event ) {
+          event.preventDefault();
+          var btn = $('#timerTrigger');
+          var btnVal = btn.val()
+
+          var newVal;
+          if (btnVal === 'Stop') {
+            newVal = 'Start';
+            stopTimer();
+
+          } else {
+            newVal = 'Stop';
+            IntID = startTimer();
+          }
+          btn.val(newVal);
+          $('#countdownContainer').toggle();
+
+    });
+
+    function showLoading() {
+        //$('#loading').show();
+    }
+
+    function hideLoading(){
+        //$('#loading').hide();
+    }
+    function makeRequest() {
+      $.ajax({
+           type: "GET",
+           url: "{{url_for('mod_api.clients_hierarchy', hierarchy=hierarchy)}}",
+           data: {},
+           beforeSend: function(){
+             showLoading();
+           },
+           complete: function(){
+             hideLoading();
+           },
+           success: function(msg){
+             time = expiration;
+             processData(msg);
+           },
+           fail: function(msg) {
+             alert("Error when getting update");
+             periodicRefresh = false;
+           }
+        });
+    }
+
+
+    var limit = $('#max_dwell').html();
+
+    function processData(msg) {
+        if (!msg.error) {
+            console.log(msg);
+            //$( ".item" ).remove();
+            //var array = msg.items.unknown_devices;
+            var array = msg.items.registered_users;
+            var mac_addresses = Array();
+
+            $('#user_count').text(array.length);
+            for (var i = 0; i < array.length; i++) {
+                var item = array[i];
+                var mac = item.mac_address;
+                $row = $('#' + mac.replaceAll(':', '-'));
+                if (($row).length > 0) {
+                    updateRow($row, item, limit);
+                } else {
+                    var createdRow = createRow(item);
+                    $('#user_list').append(createdRow);
+                }
+
+                mac_addresses.push(mac);
+            }
+
+            removeExtraRows(mac_addresses);
+
+        } else {
+            showErrorMessage(msg.error);
+        }
+    }
+
+    function removeExtraRows(mac_addresses) {
+        $( ".item" ).each(function( index ) {
+          var mac = $(this).find('.mac_address').html();
+          if (mac_addresses.indexOf(mac) < 0) {
+            $(this).remove();
+          }
+        });
+    }
+
+    function createRow(item) {
+        var user_name = item.user_info.name;
+        var user_id = item.user_info.id;
+        var arrival = new Date();
+        var dwell_time = 0;
+        var $div = $("#user_info_row_template").clone();
+        var mac_address = item.mac_address
+
+        $div.removeClass('hidden');
+        $div.addClass('item');
+        $div.attr("id", mac_address.replaceAll(':', '-'));
+
+        $div.find('.user_name').html(user_name);
+        $div.find('.user_id').html(user_id);
+        $div.find('.mac_address').html(mac_address);
+        $div.find('.user_arrival').html(arrival.getTime());
+        $div.find('.user_arrival_formatted').html(formatDate(arrival));
+
+        $div.find('.user_dwell').html(dwell_time);
+        return $div;
+    }
+
+    function updateRow(div, item, limit) {
+        var arrival = item.location.last_modified;
+        $div = $(div);
+        var arrival = $div.find('.user_arrival').html();
+
+        var delta = ((new Date().getTime()) - arrival)
+        var dwell_time = Math.floor(delta / 1000);
+        var mac_address = item.mac_address
+        var user_id = item.user_info.id;
+
+        $div.find('.user_dwell').html(dwell_time);
+        var hasClass = $div.hasClass('not_compliant');
+        console.log(hasClass);
+        if (dwell_time > limit && !hasClass) {
+            $div.addClass('not_compliant');
+            requestTriggerFire(user_id);
+            $div.find('.notified').html('True');
+        }
+        return $div;
+    }
+
+    $(document).on('click', '#timerTrigger', function(){
+			time = 1;
+			updateTimer(time);
+	    });
+    $('#timerTrigger').click();
+});
+</script>
+{% endblock %}
+{% block content %}
+
+<div class="w3-container w3-right">
+    <div class='w3-left hidden' id="countdownContainer">
+        <span>Reloading in ...</span>
+        <span id="countdown"></span>
+    </div>
+    <div class='w3-left hidden'  id="loading" style="display:none">
+        <img src="{{url_for('static', filename='img/loading.gif')}}" style="max-width:10%"/>
+    </div>
+    <form>
+        <input type="submit" value="Start" id="timerTrigger" />
+    </form>
+</div>
+<div class="w3-header">
+    {% if vertical_hierarchy %}
+        <h3>Welcome to {{vertical_hierarchy}}</h3>
+    {% else %}
+        <h3>Welcome to {{hierarchy}}</h3>
+    {% endif %}
+    <h4>Maximum dwell time: <span id="max_dwell">30</span> seconds</h4>
+</div>
+
+<div class="w3-container">
+    <h5><span id="user_count">0</span> users in the zone</h5>
+    <div style="overflow-x:auto;">
+        <table id="user_list">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>MAC Address</th>
+                <th>Arrival</th>
+                <th>Dwell time (seconds)</th>
+                <th>Notified</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr id="user_info_row_template" class="hidden">
+                <td class="user_name">Test</td>
+                <td class="mac_address">MAC Address</td>
+                <td class="user_arrival_formatted">Formatted Timestamp</td>
+                <td class="user_dwell">0</td>
+                <td class="user_arrival hidden">Timestamp</td>
+                <td class="user_id hidden">User Id</td>
+                <td class="notified">False</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+
+</div>
+{% endblock %}

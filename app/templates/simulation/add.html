@@ -1,0 +1,126 @@
+{% extends "_base/base.html" %}
+{% block title %}Simulation{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}Simulate an action{% endblock %}
+{% block content %}
+<script>
+$(document).ready(function(){
+    $("form").submit(function( event ) {
+        event.preventDefault();
+
+        var hierarchy = $("#hierarchy").val();
+        var coord_x = $("#coord_x").val();
+        var coord_y = $("#coord_y").val();
+        var mac = $("#mac_address").val();
+        var notification_type = $("#event").val();
+        var date = new Date();
+        var last_seen = date + "";
+        var timestamp = Date.now();
+        var event_id = 1;
+        var subscription_name = 'simulated action';
+        if (!mac){
+            mac =  $("#mac_address_user").val();
+        }
+        console.log(hierarchy);
+        if (mac && hierarchy && coord_x && coord_y){
+            notification = {}
+            notification["deviceId"] = mac;
+            notification["locationMapHierarchy"] = hierarchy
+            notification["confidenceFactor"] = 100
+            notification["locationCoordinate"] = {}
+            notification["locationCoordinate"]["z"] = 0
+            notification["locationCoordinate"]["y"] = coord_y
+            notification["locationCoordinate"]["x"] = coord_x
+            notification["locationCoordinate"]["unit"] = "FEET"
+            notification["lastSeen"] = last_seen
+            notification["notificationType"] = notification_type
+            notification["subscriptionName"] = subscription_name
+            notification["floorId"] = 723413320329068500
+            notification["eventId"] = event_id
+            notification["timestamp"] = event_id
+            payload = {}
+            payload["notifications"] = Array();
+            payload["notifications"].push(notification);
+            payload = JSON.stringify(payload);
+            console.log(payload);
+            $.ajax({
+                url: '{{url_for('mod_cmx_notification.add')}}',
+                type: "POST",
+                contentType:"application/json; charset=utf-8",
+                dataType: "json",
+                data: payload,
+                success: function(data) {
+                    if (data.error) {
+                        alert("Error!\n" + data.error_message);
+                    } else {
+                        alert(data.message);
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
+
+
+<form id="form" method="post">
+    <table>
+        <tr>
+            <td>Hierarchy</td>
+            <td>
+                <select id="hierarchy" name="hierarchy">
+                    {% for h in floors %}
+                        {% if h.vertical_name %}
+                            <option value="" disabled>{{ h.vertical_name }}</option>
+                                {% for z in h.zones %}
+                                <option value="{{ z.get_hierarchy() }}">>> {{ z.vertical_name }}</option>
+                                {% endfor %}
+                        {%else%}
+                            <option value="" disabled>{{ h.name }}</option>
+                                {% for z in h.zones %}
+                                <option value="{{ z.get_hierarchy() }}">>> {{ z.name }}</option>
+                                {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td>MAC:</td>
+            <td><input type="text" id="mac_address"/></td>
+            {%if users%}
+            <td>Or user</td>
+            <td>
+                <select id="mac_address_user">
+                    {% for user in users %}
+                    <option value="{{ user.mac_address }}">{{ user }}</option>
+                    {% endfor %}
+                </select>
+            </td>
+            {%endif%}
+        </tr>
+        <tr>
+            <td>Coordinates</td>
+        </tr>
+        <tr>
+            <td>X:</td>
+            <td><input type="text" id="coord_x" value="50"/></td>
+            <td>Y:</td>
+            <td><input type="text" id="coord_y" value="50" /></td>
+        </tr>
+        <tr>
+            <td>Event:</td>
+            <td>
+                <select id="event">
+                    <option value="locationupdate">Location Update</option>
+                    <option value="absence">Absence</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><input type="submit" /></td>
+        </tr>
+    </table>
+</form>
+{% endblock %}

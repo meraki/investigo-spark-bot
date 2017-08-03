@@ -1,0 +1,52 @@
+{% extends "_base/base.html" %}
+{% block title %}System Settings{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}CMX Server{% endblock %}
+{% block subsection_subtitle %}Delete instance{% endblock %}
+{% block content %}
+<p style="color:red;">Are you sure you want to remove?</p>
+<table>
+    <tr>
+        <td>Name: </td>
+        <td>
+            {{object.name}}
+        </td>
+    </tr>
+    <tr>
+        <td>URL: </td>
+        <td>{{object.url}}</td>
+    </tr>
+    <tr>
+        <td>API Username: </td>
+        <td>{{object.username}}</td>
+    </tr>
+    <tr>
+        <td>API Password: </td>
+        <td>(hidden)</td>
+    </tr>
+    <tr>
+        <td>Externally accessible?</td>
+        <td>
+            {{object.externally_accessible}}
+        </td>
+    </tr>
+    <tr>
+        <td>Active</td>
+        <td>
+            {{object.active}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="{{url_for('mod_cmx_server.edit', server_id=object.id)}}">Edit Server</a>
+        </td>
+        <td>
+            <form method="POST">
+                <input type="submit" value="Delete"/>
+                <input type="hidden" name="cmx_server_id" value="{{object.id}}"/>
+            </form>
+        </td>
+    </tr>
+</table>
+{% endblock %}

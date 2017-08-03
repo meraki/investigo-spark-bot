@@ -1,0 +1,50 @@
+<!--http://www.w3schools.com/css/css_rwd_templates.asp -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>{% block title %}{% endblock %} | CMX Investigo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/external/w3.css')}}" />
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/external/font-awesome.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{url_for('static', filename='css/base.css')}}" />
+<!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato"> -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+
+
+<script src="{{url_for('static', filename='script/external/jquery-3.1.1.min.js')}}"></script>
+<script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='script/base.js') }}"></script>
+<script type="text/javascript" charset="utf-8"  src="{{url_for('static', filename='script/base.js')}}"></script>
+
+{% include '_base/favicon.html' %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+</head>
+<body>
+<!-- Navbar -->
+{% include '_base/navbar.html' %}
+    <!-- Page content -->
+    <div class="w3-content" style="max-width:2000px;margin-top:50px">
+        <div class="w3-container w3-content w3-center w3-padding-16" style="max-width:800px;">
+            <h1 class="">CMX Investigo (&beta;)</h1>
+        </div>
+        <div class="w3-container w3-content" style="">
+            <h2 class="w3-wide">{%block subsection_title %}{% endblock %}</h2>
+            <h3>{%block subsection_subtitle %}{% endblock %}</h3>
+        </div>
+        <div class="w3-container w3-content w3-padding-8">
+             {% block content %}{% endblock %}
+        </div>
+    </div>
+<script>
+    // Used to toggle the menu on small screens when clicking on the menu button
+function myFunction() {
+    var x = document.getElementById("navDemo");
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+    }
+}
+</script>
+</body>
+</html>

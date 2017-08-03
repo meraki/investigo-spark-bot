@@ -1,0 +1,58 @@
+{% extends "_base/base.html" %}
+{% block title %}Device Select{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block subsection_title %}Select Device{% endblock %}
+{% block content %}
+<div class="w3-left" id="content">
+
+	<table>
+            {% if data.registered_users %}
+        	<form id="registered_users" method="post">
+	    		<tr>
+		    		<td>Users found on the network</td>
+		    		<td>
+				    	<select name="mac" >
+				    		{% for i in data.registered_users %}
+								<option value="{{ i.mac_address }}">{{ i.mac_address }}</option>
+							{% endfor %}
+				    	</select>
+					</td>
+					<td>
+						<input type="submit" />
+					</td>
+				</tr>
+		    </form>
+		    {% endif %}
+    		{% if data.unknown_devices %}
+        	<form id="unknown_devices" method="post">>
+	    		<tr>
+		    		<td>Devices found on the network</td>
+		    		<td>
+				    	<select name="mac" >
+				    		{% for i in data.unknown_devices %}
+								<option value="{{ i.mac_address }}">{{ i.mac_address }}</option>
+							{% endfor %}
+				    	</select>
+					</td>
+					<td>
+						<input type="submit" />
+					</td>
+				</tr>
+		    </form>
+		    {% endif %}
+		    <form id="text" method="post">
+	    		<tr>
+		    		<td>Which device you would like to track</td>
+		    		<td>
+				    	<input type="text" name="mac" />
+					</td>
+					<td>
+						<input type="submit" />
+					</td>
+				</tr>
+		    </form>
+    	</table>
+</div>
+{% endblock %}

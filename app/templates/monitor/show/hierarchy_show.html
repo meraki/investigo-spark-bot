@@ -1,0 +1,239 @@
+{% extends "_base/base.html" %}
+{% block title %}Hierarchy Monitoring{% endblock %}
+{% block subtitle %}{{hierarchy}}{% endblock %}
+{% block scripts %}
+<script type="text/javascript" charset="utf-8" src="{{url_for('static', filename='script/plot_asset_over_map.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+
+    var pathArray = window.location.pathname.split( '/' );
+var namespace = unescape(pathArray[pathArray.length - 1])
+
+    var expirationWhenIdle = 5;
+    var expirationWhenEngaging = 10;
+
+    var expiration = expirationWhenIdle; //seconds
+
+    var time = expiration;
+
+    var IntID;
+    function startTimer() {
+        i = setInterval( function() {
+
+            time--;
+            if (time === 0) {
+                makeRequest();
+                time = expiration
+            }
+            updateTimer(time);
+        }, 1000);
+        return i;
+    }
+
+    function stopTimer() {
+        clearInterval(IntID);
+    }
+
+    function updateTimer(time) {
+        $('#countdown').html(time);
+    }
+    updateTimer(time)
+    $("form").submit(function( event ) {
+          event.preventDefault();
+          var btn = $('#timerTrigger');
+          var btnVal = btn.val()
+
+          var newVal;
+          if (btnVal === 'Stop') {
+            newVal = 'Start';
+            stopTimer();
+
+          } else {
+            newVal = 'Stop';
+            IntID = startTimer();
+          }
+          btn.val(newVal);
+          $('#countdownContainer').toggle();
+
+    });
+
+    function showLoading() {
+        //$('#loading').show();
+    }
+
+    function hideLoading(){
+        //$('#loading').hide();
+    }
+
+
+    $('#timerTrigger').click();
+
+    $(document).on('click', '.slideTrigger', function(){
+        var div = $(this).parent().parent().find(".hierarchy-container");
+        var text;
+        if (!$(div).hasClass("hidden")) {
+            //$(div).hide();
+            $(div).addClass("hidden");
+            text = "(view details)"
+        } else {
+            //$(div).show();
+            $(div).removeClass("hidden");
+            text = "(hide details)"
+        }
+        $(this).text(text);
+    });
+
+
+    function makeRequest() {
+    $.ajax({
+        type: "GET",
+        url: "{{url_for('mod_api.clients_hierarchy')}}/" + namespace,
+        data: {},
+        beforeSend: function() {
+            //stopTimer();
+        },
+        success: function(msg) {
+            time = expiration;
+            updateScreen(msg);
+            //hideErrorMessage();
+            console.log(msg);
+
+        },
+        fail: function(msg) {
+            showErrorMessage("Error when getting update");
+        },
+        always: function() {
+            alert("complete");
+        }
+    });
+}
+
+function updateScreen(msg) {
+    console.log(msg);
+    if (msg.error) {
+        showErrorMessage(msg.error);
+
+    } else {
+        //hideErrorMessage();
+        var name = null;
+        var item;
+        var location;
+        var tracked = false;
+
+        var user_coordinates = []
+        var unknown_devices_coordinates = []
+        $('#registered_users_count').text(msg.items.registered_users.length);
+        $('#unknown_devices_count').text(msg.items.unknown_devices.length);
+
+        var floor_width = null;
+        var floor_height = null;
+        var floor_length = null;
+        var image_width = null;
+        var image_height = null;
+        $('#registered_users').html('');
+        if (msg.items.registered_users.length > 0) {
+            var item = msg.items.registered_users[0];
+            floor_width = item.location.map_information.floor_width
+            floor_height = item.location.map_information.floor_height
+            floor_length = item.location.map_information.floor_length
+            image_width = item.location.map_information.image_width
+            image_height = item.location.map_information.image_height
+            map_path = item.location.map_information.map_path
+
+            for (var i = 0; i < msg.items.registered_users.length; i++) {
+                var item = msg.items.registered_users[i]
+                var coordinate = [item.location.coord_x, item.location.coord_y];
+                user_coordinates.push(coordinate);
+            }
+
+
+            var html = '';
+            for (var i = 0; i < msg.items.registered_users.length; i++) {
+                var item = msg.items.registered_users[i]
+                var coordinate = [item.location.coord_x, item.location.coord_y];
+                user_coordinates.push(coordinate);
+                html = '<li>';
+                html += '<a href="';
+                html += "{{url_for('mod_monitor.device_show')}}"
+                html += '/' + item.mac_address;
+                html += '">';
+                html += item.mac_address;
+                html += '</a>';
+                html += '</li>';
+                $('#registered_users').append(html);
+            }
+
+        }
+        $('#unknown_devices').html('');
+        if (msg.items.unknown_devices.length > 0) {
+            var item = msg.items.unknown_devices[0];
+
+            floor_width = item.location.map_information.floor_width
+            floor_height = item.location.map_information.floor_height
+            floor_length = item.location.map_information.floor_length
+            image_width = item.location.map_information.image_width
+            image_height = item.location.map_information.image_height
+            map_path = item.location.map_information.map_path
+
+            var html = '';
+            for (var i = 0; i < msg.items.unknown_devices.length; i++) {
+                var item = msg.items.unknown_devices[i]
+                var coordinate = [item.location.coord_x, item.location.coord_y];
+                unknown_devices_coordinates.push(coordinate);
+                html = '<li>';
+                html += '<a href="';
+                html += "{{url_for('mod_monitor.device_show')}}"
+                html += '/' + item.mac_address;
+                html += '">';
+                html += item.mac_address;
+                html += '</a>';
+                html += '</li>';
+                $('#unknown_devices').append(html);
+            }
+        }
+
+        if (floor_width && map_path) {
+            plot(map_path, user_coordinates, unknown_devices_coordinates, floor_width, floor_height, floor_length, image_width, image_height);
+        }
+    }
+}
+
+});
+
+</script>
+
+{% endblock %}
+{% block content %}
+<div class="w3-header">
+    <h2>{{hierarchy}}</h2>
+</div>
+<div class="w3-container w3-right">
+    <div class='w3-left hidden' id="countdownContainer">
+        <span>Reloading in ...</span>
+        <span id="countdown"></span>
+    </div>
+    <div class='w3-left hidden'  id="loading" style="display:none">
+        <img src="{{url_for('static', filename='img/loading.gif')}}" style="max-width:10%"/>
+    </div>
+    <form>
+        <input type="submit" value="Start" id="timerTrigger" />
+    </form>
+    <p style="color:red" class="hidden" id="error">Error!</p>
+</div>
+    <span id="last_updated"></span>
+    <div class="w3-left">
+        <canvas class="show-when-present" id="map-canvas" style="widht:100%; min-width: 600px; height:400px;">Your browser does not support the canvas HTML5 element.</canvas>
+        </div>
+
+    <div style="width:100%; float:left">
+        <h4>Registered users (<span id="registered_users_count"></span>)</h4>
+        <ul id="registered_users"></ul>
+    </div>
+
+    <div style="width:100%; float:left">
+        <h4>Unknown devices (<span id="unknown_devices_count"></span>)</h4>
+        <ul id="unknown_devices"></ul>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "_base/base.html" %}
+{% block title %}User Info{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}Registered User{% endblock %}
+{% block content %}
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td>{{object.name}}</td>
+        </tr>
+        <tr>
+            <td>Phone: </td>
+            <td>{{object.phone}}</td>
+        </tr>
+        <tr>
+            <td>MAC Address: </td>
+            <td>{{object.mac_address}}</td>
+        </tr>
+        <tr>
+            <td>
+                <a href="{{url_for('mod_user.edit', id=object.id)}}">Edit</a>
+            </td>
+            <td>
+                <a href="{{url_for('mod_user.delete', id=object.id)}}">Delete</a>
+            </td>
+        </tr>
+        <tr>
+            <td><a href="{{url_for('mod_monitor.device_show', mac=object.mac_address)}}">TRACK</a></td>
+        </tr>
+    </table>
+{% endblock %}

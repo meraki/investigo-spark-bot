@@ -1,0 +1,162 @@
+{% extends "_base/base.html" %}
+{% block title %}Trigger an Action{% endblock %}
+{% block style %}
+<style>
+
+.table-header {
+
+    text-align:center;
+    font-weight: bold;
+}
+.form-field-name {
+
+}
+
+</style>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript" charset="utf-8">
+
+$(document).ready(function(){
+    $("form").submit(function( event ) {
+        event.preventDefault();
+        var serializedForm = $(this).serializeObject();
+        var user = serializedForm.registered_user_id;
+        var zone = serializedForm.zone;
+        var postOnSpark = serializedForm.spark_checkbox;
+        var postOnTropo = serializedForm.tropo_checkbox;
+
+        if (user && zone && zone.length > 0 && (postOnSpark || postOnTropo)){
+            $.ajax({
+                url: '{{url_for('mod_engagement.engagement_trigger_user_add')}}',
+                type: 'POST',
+                data: JSON.stringify(serializedForm),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function(msg) {
+                    if (msg.error) {
+                        alert("Error!\n" + msg.error_message);
+                    } else {
+                        alert(msg.message);
+                    }
+                }
+            });
+        } else {
+            alert('Some required fields were not provided');
+        }
+    });
+});
+</script>
+{% endblock %}
+{% block subsection_title %}Trigger an action{% endblock %}
+{% block content %}
+
+<div class="w3-container">
+    <form id="form" method="post">
+        <table>
+            <tr>
+                <td colspan="2" class="table-header">Conditions</td>
+            <tr>
+                <td class="form-field-name">Hierarchy:</td>
+                <td>
+                <select id="zone" name="zone">
+                    {% for h in floors %}
+                        {% if h.vertical_name %}
+                            <option value="" disabled>{{ h.vertical_name }}</option>
+                                {% for z in h.zones %}
+                                <option value="{{ z.id }}">>> {{ z.vertical_name }}</option>
+                                {% endfor %}
+                        {%else%}
+                            <option value="" disabled>{{ h.name }}</option>
+                                {% for z in h.zones %}
+                                <option value="{{ z.id }}">>> {{ z.name }}</option>
+                                {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </select>
+            </td>
+            </tr>
+            <tr>
+                <td class="form-field-name">User:</td>
+                <td>
+                    <select name="registered_user_id">
+                        {% for registered_user in users %}
+                        <option value="{{ registered_user.id }}">{{ registered_user }}</option>
+                        {% endfor %}
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td class="form-field-name">Event:</td>
+                <td>
+                    <select name="event">
+                        <option value="in">Entered Area</option>
+                        <option value="out">Left Area</option>
+                    </select>
+                </td>
+            </tr>
+
+                <tr>
+                    <td colspan="2" class="table-header">Actions</td>
+                </tr>
+                <tr class="table-header">
+                    <td colspan="2"><img src="{{url_for('static', filename='img/spark.png')}}" alt="spark" style="max-height: 50px;"/></td>
+
+                </tr>
+                <tr>
+                    <td class="form-field-name">Post on Spark</td>
+                    <td>
+                        <input type="checkbox" name="spark_checkbox"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-field-name">Spark Room Id</td>
+                    <td>
+                        <input class='fill_rest' type="text" name="spark_target" value="{{default_room_id}}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-field-name">Text</td>
+                    <td>
+                         <textarea rows="3"  class='fill_rest' type="text" name="spark_value">{user.name} has just entered {zone.name}.</textarea>
+                    </td>
+                </tr>
+                <tr class="table-header">
+                    <td colspan="2"><img src="{{url_for('static', filename='img/tropo.png')}}" alt="tropo" style="max-height: 50px; max-width: 50px;"/></td>
+                </tr>
+                <tr>
+                    <td class="form-field-name">Engage with Tropo</td>
+                    <td>
+                        <input type="checkbox" name="tropo_checkbox"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-field-name">Method:</td>
+                    <td>
+                        <select name="tropo_platform">
+                            <option value="text">SMS</option>
+                            <option value="voice">Voice</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-field-name">Phone Number</td>
+                    <td>
+                        <input class='fill_rest' type="text" name="tropo_target" value="{user.phone}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="form-field-name">Text</td>
+                    <td>
+                        <textarea rows="4"  class='fill_rest' type="text" name="tropo_value">Hi, {user.name}. Welcome to {zone.name}.</textarea>
+                    </td>
+                </tr>
+        <tr>
+            <td><input type="submit" /></td>
+        </tr>
+
+        </table>
+    </form>
+</div>
+
+{% endblock %}

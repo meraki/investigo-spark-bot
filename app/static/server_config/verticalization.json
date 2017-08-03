@@ -1,0 +1,178 @@
+[
+  {
+    "vertical": "retail",
+    "languages": [
+      "English",
+      "Portuguese"
+    ],
+    "items": [
+      {
+        "language": "Portuguese",
+        "name": "Varejo",
+        "vertical_names": {
+          "campi": [
+            "Filial Sao Paulo",
+            "Filial Recife",
+            "Filial Rio de Janeiro"
+          ],
+          "buildings": [
+            "Santa Efigenia",
+            "Pinheiros",
+            "Itaim Bibi"
+          ],
+          "floors": [
+            "Terreo",
+            "Segundo andar",
+            "Terceiro andar",
+            "Subsolo"
+          ],
+          "zones": [
+            "Anfiteatro",
+            "Estoque",
+            "Televisores",
+            "Computadores",
+            "Sala de estar",
+            "Laptops",
+            "Celulares",
+            "Tablets",
+            "Portateis",
+            "Setor promocional",
+            "Caixas",
+            "Novidades",
+            "Gerencia",
+            "Lanchonete",
+            "Banheiros"
+          ]
+        }
+      },
+      {
+        "language": "English",
+        "name": "Retail",
+        "vertical_names": {
+          "campi": [
+            "NY",
+            "San Francisco"
+          ],
+          "buildings": [
+            "1st Street",
+            "2nd Street",
+            "2rd Street",
+            "4th Street"
+          ],
+          "floors": [
+            "1st floor",
+            "2nd floor",
+            "3rd floor",
+            "4th floor",
+            "5th floor"
+          ],
+          "zones": [
+            "Amphitheater",
+            "Stock",
+            "TVs",
+            "Computers",
+            "Living room",
+            "Laptops",
+            "Mobile phones",
+            "Tablets",
+            "Portables",
+            "Promotions",
+            "Checkout",
+            "New arrivals",
+            "Management",
+            "Food court",
+            "Bathrooms"
+          ]
+        }
+      }
+    ]
+  },
+  {
+    "vertical": "healthcare",
+    "languages": [
+      "Portuguese",
+      "English"
+    ],
+    "items": [
+      {
+        "language": "Portuguese",
+        "name": "Saude",
+        "vertical_names": {
+          "campi": [
+            "Filial Sao Paulo",
+            "Filial Recife",
+            "Filial Rio de Janeiro"
+          ],
+          "buildings": [
+            "Santa Efigenia",
+            "Pinheiros",
+            "Itaim Bibi"
+          ],
+          "floors": [
+            "Terreo",
+            "Segundo andar",
+            "Terceiro andar",
+            "Subsolo"
+          ],
+          "zones": [
+            "Anfiteatro",
+            "Endoscopia",
+            "Centro de queimados",
+            "Geriatria",
+            "UTI",
+            "Fisioterapia",
+            "Cirurgia",
+            "Neonatal",
+            "Cardiologia",
+            "Psiquiatria",
+            "Pediatria",
+            "Farmacia",
+            "Lanchonete",
+            "Deposito",
+            "Banheiros"
+          ]
+        }
+      },
+      {
+        "language": "English",
+        "name": "Healthcare",
+        "vertical_names": {
+          "campi": [
+            "NY",
+            "San Francisco"
+          ],
+          "buildings": [
+            "1st Street",
+            "2nd Street",
+            "2rd Street",
+            "4th Street"
+          ],
+          "floors": [
+            "1st floor",
+            "2nd floor",
+            "3rd floor",
+            "4th floor",
+            "5th floor"
+          ],
+          "zones": [
+            "Amphitheater",
+            "Endoscopy",
+            "Burn center",
+            "Geriatric",
+            "Intensive care unit",
+            "Physical therapy",
+            "Operating room",
+            "Neonatal",
+            "Cardiology",
+            "Psychiatric",
+            "Pediatric",
+            "Pharmacy",
+            "Food court",
+            "Warehouse",
+            "Restrooms"
+          ]
+        }
+      }
+    ]
+  }
+]

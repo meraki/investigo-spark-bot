@@ -1,0 +1,336 @@
+{% extends "_base/base.html" %}
+{% block title %}Overview{% endblock %}
+{% block style %}
+<style>
+    .zone {
+        width:35%;
+        min-width: 250px;
+        min-height: 175px;
+        float:left;
+        background-color:white;
+        margin:25px 15px;
+        border-radius:5px;
+        padding-left: 6%;
+        padding-right: 6%;
+    }
+
+    .green{
+      background-color: #9EEBA1;
+    }
+
+    .yellow {
+        background-color: #EDE89A;
+    }
+
+    .red {
+        background-color: #EBA39E;
+    }
+
+    .zone_name {
+        font-weight: bold;
+        font-weight:normal;
+        text-align:center;
+        width:87%;
+
+        border:2px dashed #F7EEEE;
+        border-radius:5px;
+     }
+
+     .zone table {
+        width: 87%;
+     }
+
+
+    /* Box style inspired by http://codepen.io/jcorpus/pen/xbExKL */
+
+    .shadow1 {
+        position:relative;
+    }
+    .shadow1 {
+        box-shadow:0 1px 4px rgba(0, 0, 0, 0.3), 0 0 20px rgba(0, 0, 0, 0.1) inset;
+    }
+    /*****************************************************************dashed border
+    ****************************************************************/
+    .shadow1 h3 {
+
+    }
+    /****************************************************************
+    *styling shadows
+    ****************************************************************/
+    .shadow1:before, .shadow1:after{
+      position:absolute;
+      content:"";
+      bottom:12px;left:15px;top:80%;
+      width:45%;
+      background:#9B7468;
+      z-index:-1;
+      -webkit-box-shadow: 0 20px 15px #9B7468;
+      -moz-box-shadow: 0 20px 15px #9B7468;
+      box-shadow: 0 20px 15px #9B7468;
+      -webkit-transform: rotate(-6deg);
+      -moz-transform: rotate(-6deg);
+      transform: rotate(-6deg);
+    }
+    .shadow1:after{
+      -webkit-transform: rotate(6deg);
+      -moz-transform: rotate(6deg);
+      transform: rotate(6deg);
+      right: 15px;left: auto;
+    }
+
+
+
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" charset="utf-8">
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
+
+$(document).ready(function() {
+    var expirationWhenIdle = 5;
+    var expirationWhenEngaging = 10;
+
+    var expiration = expirationWhenIdle; //seconds
+
+    var time = expiration;
+
+    var IntID;
+    function startTimer() {
+        i = setInterval( function() {
+
+            time--;
+            if (time === 0) {
+                makeRequest();
+                time = expiration
+            }
+            updateTimer(time);
+        }, 1000);
+        return i;
+    }
+
+    function stopTimer() {
+        clearInterval(IntID);
+    }
+
+    function updateTimer(time) {
+        $('#countdown').html(time);
+    }
+    updateTimer(time)
+    $("form").submit(function( event ) {
+          event.preventDefault();
+          var btn = $('#timerTrigger');
+          var btnVal = btn.val()
+
+          var newVal;
+          if (btnVal === 'Stop') {
+            newVal = 'Start';
+            stopTimer();
+
+          } else {
+            newVal = 'Stop';
+            IntID = startTimer();
+          }
+          btn.val(newVal);
+          $('#countdownContainer').toggle();
+
+    });
+
+    function showLoading() {
+        //$('#loading').show();
+    }
+
+    function hideLoading(){
+        //$('#loading').hide();
+    }
+    function makeRequest() {
+      $.ajax({
+           type: "GET",
+           url: "{{url_for('mod_api.overview')}}",
+           data: {},
+           beforeSend: function(){
+             showLoading();
+           },
+           complete: function(){
+             hideLoading();
+           },
+           success: function(msg){
+             time = expiration;
+             processData(msg);
+           },
+           fail: function(msg) {
+             alert("Error when getting update");
+             periodicRefresh = false;
+           }
+        });
+    }
+
+    var userBeingEngaged = null;
+
+    function processData(msg) {
+
+        if (msg.error) {
+            showErrorMessage(msg.error);
+        } else {
+            processHierarchies(msg.hierarchies);
+        }
+    }
+
+    function processHierarchies(hierarchies) {
+        console.log(hierarchies);
+        $( ".zone" ).each(function( index ) {
+          var hierarchy = null;
+          for (var i = 0; i < hierarchies.length; i++) {
+            var h = hierarchies[i];
+            var id = $(this).attr('id');
+            var name = h.name.replaceAll('!', '').replaceAll('>', '_').replaceAll(' ', '}');
+            console.log(name);
+            if (name === id) {
+                hierarchy = h;
+                break;
+            }
+           }
+          var registered_users_count = 0;
+          var unknown_devices_count = 0;
+          if (hierarchy != null) {
+              registered_users_count = hierarchy.registered_users.length;
+              unknown_devices_count = hierarchy.unknown_devices.length;
+          }
+          var device_count = $($(this).find('.device_count').get(0));
+          //console.log(device_count);
+          device_count.text(unknown_devices_count);
+          var user_count = $($(this).find('.user_count').get(0));
+          user_count.text(registered_users_count);
+
+            var sum = unknown_devices_count + registered_users_count;
+
+        var limit = $($(this).find('.limit').get(0)).text();
+
+          var status;
+
+          if (sum > limit) {
+            status = 'red';
+          } else if (sum > limit * 0.5) {
+            status = 'yellow';
+          } else {
+            status = 'green';
+          }
+
+          changeOccupancyStatus($(this), status)
+
+        });
+    }
+
+    function changeOccupancyStatus(element, status) {
+        element.removeClass('yellow');
+        element.removeClass('green');
+        element.removeClass('red');
+        element.addClass(status);
+    }
+
+    function showErrorMessage() {
+        $("#error").show();
+    }
+
+    $(document).on('click', '#timerTrigger', function(){
+			time = 1;
+			updateTimer(time);
+	});
+
+    $('#timerTrigger').click();
+
+    $(document).on('click', '.slideTrigger', function(){
+        var div = $(this).parent().parent().find(".hierarchy-container");
+        var text;
+        if (!$(div).hasClass("hidden")) {
+            //$(div).hide();
+            $(div).addClass("hidden");
+            text = "(view details)"
+        } else {
+            //$(div).show();
+            $(div).removeClass("hidden");
+            text = "(hide details)"
+        }
+        $(this).text(text);
+    });
+
+});
+</script>
+{% endblock %}
+{% block content %}
+<div class="w3-container w3-right">
+    <div class='w3-left hidden' id="countdownContainer">
+        <span>Reloading in ...</span>
+        <span id="countdown"></span>
+    </div>
+    <div class='w3-left hidden'  id="loading" style="display:none">
+        <img src="{{url_for('static', filename='img/loading.gif')}}" style="max-width:10%"/>
+    </div>
+    <form>
+        <input type="submit" value="Start" id="timerTrigger" />
+    </form>
+    <p style="color:red" class="hidden" id="error">Error!</p>
+</div>
+<div class="w3-header">
+    <h2>Device Distribution</h2>
+</div>
+<div id="overview">
+    {% for campus in data %}
+        <div class="campus w3-container">
+            {% for building in campus.buildings %}
+                {% if building.vertical_name %}
+                     <h3>{{building.vertical_name}}</h3>
+                {% else %}
+                    <h3>{{building.name}}</h3>
+                {% endif %}
+                <div class="building w3-container">
+                    {% for floor in building.floors %}
+                        <div class="floor w3-container">
+                            {% if floor.vertical_name %}
+                                 <h3>{{floor.vertical_name}}</h3>
+                            {% else %}
+                                <h3>{{floor.name}}</h3>
+                            {% endif %}
+                            {% for zone in floor.zones %}
+                                {% set id = campus.name~'_'~building.name~'_'~floor.name~'_'~zone.name %}
+                                {% set id = id | replace ('!', '') %}
+                                <div id="{{id}}" class="w3-container zone shadow1 green">
+                                    <div>
+                                        {% set vertical_name = 'N/A' %}
+                                        {% set max_occupancy = 'N/A' %}
+                                        {% if zone.vertical_name %}
+                                            {% set vertical_name = zone.vertical_name %}
+                                            {% set max_occupancy = zone.max_occupation %}
+                                            <h4 class="zone_name">{{vertical_name}}</h4>
+                                        {% else %}
+                                            <h4 class="zone_name">{{zone.name}}</h4>
+                                        {% endif %}
+                                        <table>
+                                            <tr>
+                                                <td>Devices</td>
+                                                <td class="device_count">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Users</td>
+                                                <td class="user_count">0</td>
+                                            </tr>
+                                            <tr>
+                                                <td>Limit</td>
+                                                <td class="limit">{{max_occupancy}}</td>
+                                            </tr>
+                                        </table>
+                                        <a class="more_info_link w3-right" href="{{url_for('mod_monitor.hierarchy_show', hierarchy=campus.name~'>'~building.name~'>'~floor.name~'>'~zone.name)}}">Details</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endfor %}
+                </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}

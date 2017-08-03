@@ -1,0 +1,9 @@
+{% extends "_base/base.html" %}
+{% block title %}Error!{% endblock %}
+{% block content %}
+{% block subsection_title %}Error!
+    {% if message %}
+        {{message}}
+    {%endif%}
+{% endblock %}
+{% endblock %}

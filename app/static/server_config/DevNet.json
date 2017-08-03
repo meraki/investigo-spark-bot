@@ -1,0 +1,999 @@
+{
+    "version": 0,
+    "campuses": [
+        {
+            "aesUid": 723413320329068628,
+            "name": "CiscoLiveLatAm",
+            "image": {
+                "height": 0.0,
+                "zoomLevel": 0,
+                "width": 0.0,
+                "imageName": "blank_floor.png",
+                "maxResolution": 0.0,
+                "colorDepth": 0,
+                "size": 0.0
+            },
+            "objectVersion": 0,
+            "aesUidString": "723413320329068628",
+            "members": null,
+            "buildingList": [
+                {
+                    "aesUid": 723413320329068629,
+                    "name": "MoonPalaceExpo",
+                    "image": null,
+                    "objectVersion": 0,
+                    "aesUidString": "723413320329068629",
+                    "hierarchyName": "CiscoLiveLatAm>MoonPalaceExpo",
+                    "dimension": {
+                        "offsetX": 0.0,
+                        "offsetY": 0.0,
+                        "height": 10.0,
+                        "width": 400.0,
+                        "length": 400.0,
+                        "unit": "FEET"
+                    },
+                    "floorList": [
+                        {
+                            "filterRegions": [
+                                {
+                                    "regionCoordinates": [
+                                        {
+                                            "y": 0.0,
+                                            "x": 0.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 0.0,
+                                            "x": 370.6,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 368.0,
+                                            "x": 370.6,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 368.0,
+                                            "x": 0.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ],
+                                    "isDefault": false,
+                                    "regionType": "OUTSIDE"
+                                }
+                            ],
+                            "hierarchyName": "CiscoLiveLatAm>MoonPalaceExpo>SecondFloor",
+                            "aesUid": 723413320329068630,
+                            "isOutdoor": false,
+                            "gpsMarkers": null,
+                            "geoLocationCapable": "NO_GPS_MARKERS_PRESENT",
+                            "floorNumber": 2,
+                            "obstacles": null,
+                            "objectVersion": 0,
+                            "zones": null,
+                            "aesUidString": "723413320329068630",
+                            "calibrationModelId": 723413320329068547,
+                            "image": {
+                                "height": 1086.0,
+                                "zoomLevel": 4,
+                                "width": 1093.0,
+                                "imageName": "domain_0_1446506610906.jpg",
+                                "maxResolution": 8.0,
+                                "colorDepth": 8,
+                                "size": 1093.0
+                            },
+                            "exciters": null,
+                            "accessPoints": null,
+                            "referenceMarkers": null,
+                            "dimension": {
+                                "offsetX": 0.0,
+                                "offsetY": 0.0,
+                                "height": 30.0,
+                                "width": 370.6,
+                                "length": 368.0,
+                                "unit": "FEET"
+                            },
+                            "filterRails": null,
+                            "name": "SecondFloor"
+                        }
+                    ]
+                }
+            ],
+            "dimension": {
+                "offsetX": 0.0,
+                "offsetY": 0.0,
+                "height": 10.0,
+                "width": 400.0,
+                "length": 400.0,
+                "unit": "FEET"
+            }
+        },
+        {
+            "aesUid": 723413320329068546,
+            "name": "Unassigned",
+            "image": {
+                "height": 0.0,
+                "zoomLevel": 0,
+                "width": 0.0,
+                "imageName": "blank_floor.png",
+                "maxResolution": 0.0,
+                "colorDepth": 0,
+                "size": 0.0
+            },
+            "objectVersion": 0,
+            "aesUidString": "723413320329068546",
+            "members": null,
+            "buildingList": [],
+            "dimension": {
+                "offsetX": 0.0,
+                "offsetY": 0.0,
+                "height": 99999.0,
+                "width": 99999.0,
+                "length": 99999.0,
+                "unit": "FEET"
+            }
+        },
+        {
+            "aesUid": 723413320329068588,
+            "name": "DevNetCampus",
+            "image": {
+                "height": 0.0,
+                "zoomLevel": 0,
+                "width": 0.0,
+                "imageName": "domain_1_1421088051901.png",
+                "maxResolution": 0.0,
+                "colorDepth": 0,
+                "size": 0.0
+            },
+            "objectVersion": 0,
+            "aesUidString": "723413320329068588",
+            "members": null,
+            "buildingList": [
+                {
+                    "aesUid": 723413320329068589,
+                    "name": "DevNetBuilding",
+                    "image": null,
+                    "objectVersion": 0,
+                    "aesUidString": "723413320329068589",
+                    "hierarchyName": "DevNetCampus>DevNetBuilding",
+                    "dimension": {
+                        "offsetX": 0.0,
+                        "offsetY": 0.0,
+                        "height": 10.0,
+                        "width": 307.0,
+                        "length": 81.9,
+                        "unit": "FEET"
+                    },
+                    "floorList": [
+                        {
+                            "filterRegions": [
+                                {
+                                    "regionCoordinates": [
+                                        {
+                                            "y": 0.0,
+                                            "x": 0.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 0.0,
+                                            "x": 307.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 81.9,
+                                            "x": 307.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 81.9,
+                                            "x": 0.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ],
+                                    "isDefault": false,
+                                    "regionType": "OUTSIDE"
+                                }
+                            ],
+                            "hierarchyName": "DevNetCampus>DevNetBuilding>DevNetZone",
+                            "aesUid": 723413320329068590,
+                            "isOutdoor": false,
+                            "gpsMarkers": null,
+                            "geoLocationCapable": "NO_GPS_MARKERS_PRESENT",
+                            "floorNumber": 1,
+                            "obstacles": null,
+                            "objectVersion": 0,
+                            "zones": [
+                                {
+                                    "zoneType": "ZONE",
+                                    "name": "Zone1",
+                                    "zoneCoordinate": [
+                                        {
+                                            "y": 5.0852885,
+                                            "x": 180.31354,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 35.797787,
+                                            "x": 180.31354,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 36.098892,
+                                            "x": 265.5746,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 4.7841854,
+                                            "x": 265.27332,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "zoneType": "ZONE",
+                                    "name": "Zone2",
+                                    "zoneCoordinate": [
+                                        {
+                                            "y": 43.024258,
+                                            "x": 214.96025,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 75.24227,
+                                            "x": 215.26154,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 75.54337,
+                                            "x": 266.47842,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 43.024258,
+                                            "x": 266.47842,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "zoneType": "ZONE",
+                                    "name": "Zone3",
+                                    "zoneCoordinate": [
+                                        {
+                                            "y": 13.850736,
+                                            "x": 93.69676,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 42.75662,
+                                            "x": 93.69676,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 42.75662,
+                                            "x": 134.06772,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 15.055147,
+                                            "x": 133.46516,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "zoneType": "ZONE",
+                                    "name": "Zone4",
+                                    "zoneCoordinate": [
+                                        {
+                                            "y": 34.325737,
+                                            "x": 34.044163,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 33.72353,
+                                            "x": 60.255154,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 54.19853,
+                                            "x": 63.87046,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 56.607353,
+                                            "x": 37.358192,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "aesUidString": "723413320329068590",
+                            "calibrationModelId": 723413320329068547,
+                            "image": {
+                                "height": 544.0,
+                                "zoomLevel": 4,
+                                "width": 2038.0,
+                                "imageName": "domain_0_1421088463647.png",
+                                "maxResolution": 8.0,
+                                "colorDepth": 8,
+                                "size": 2038.0
+                            },
+                            "exciters": null,
+                            "accessPoints": [
+                                {
+                                    "floorIdString": "723413320329068590",
+                                    "angle": 1.57,
+                                    "name": "T1-1",
+                                    "mapCoordinates": {
+                                        "y": 57.875366,
+                                        "x": 43.89617,
+                                        "z": 16.5,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068590,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:02:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068590",
+                                    "angle": 1.57,
+                                    "name": "T1-2",
+                                    "mapCoordinates": {
+                                        "y": 11.7,
+                                        "x": 98.1,
+                                        "z": 16.5,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068590,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:03:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068590",
+                                    "angle": 1.57,
+                                    "name": "T1-3",
+                                    "mapCoordinates": {
+                                        "y": 57.570957,
+                                        "x": 155.2847,
+                                        "z": 16.5,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068590,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:04:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068590",
+                                    "angle": 1.57,
+                                    "name": "T1-4",
+                                    "mapCoordinates": {
+                                        "y": 12.6,
+                                        "x": 213.6,
+                                        "z": 16.5,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068590,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:05:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068590",
+                                    "angle": 1.57,
+                                    "name": "T1-5",
+                                    "mapCoordinates": {
+                                        "y": 58.47978,
+                                        "x": 253.69617,
+                                        "z": 16.5,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068590,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:06:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                }
+                            ],
+                            "referenceMarkers": null,
+                            "dimension": {
+                                "offsetX": 0.0,
+                                "offsetY": 0.0,
+                                "height": 16.5,
+                                "width": 307.0,
+                                "length": 81.9,
+                                "unit": "FEET"
+                            },
+                            "filterRails": null,
+                            "name": "DevNetZone"
+                        }
+                    ]
+                }
+            ],
+            "dimension": {
+                "offsetX": 0.0,
+                "offsetY": 0.0,
+                "height": 10.0,
+                "width": 307.0,
+                "length": 81.9,
+                "unit": "FEET"
+            }
+        },
+        {
+            "aesUid": 723413320329068648,
+            "name": "CiscoCampus",
+            "image": {
+                "height": 0.0,
+                "zoomLevel": 0,
+                "width": 0.0,
+                "imageName": "blank_floor.png",
+                "maxResolution": 0.0,
+                "colorDepth": 0,
+                "size": 0.0
+            },
+            "objectVersion": 0,
+            "aesUidString": "723413320329068648",
+            "members": null,
+            "buildingList": [
+                {
+                    "aesUid": 723413320329068649,
+                    "name": "Building 9",
+                    "image": null,
+                    "objectVersion": 0,
+                    "aesUidString": "723413320329068649",
+                    "hierarchyName": "CiscoCampus>Building 9",
+                    "dimension": {
+                        "offsetX": 0.0,
+                        "offsetY": 0.0,
+                        "height": 10.0,
+                        "width": 799.9,
+                        "length": 799.9,
+                        "unit": "FEET"
+                    },
+                    "floorList": [
+                        {
+                            "filterRegions": [
+                                {
+                                    "regionCoordinates": [
+                                        {
+                                            "y": 0.0,
+                                            "x": 0.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 0.0,
+                                            "x": 39.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 74.1,
+                                            "x": 39.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        },
+                                        {
+                                            "y": 74.1,
+                                            "x": 0.0,
+                                            "z": 0.0,
+                                            "unit": "FEET"
+                                        }
+                                    ],
+                                    "isDefault": false,
+                                    "regionType": "OUTSIDE"
+                                }
+                            ],
+                            "hierarchyName": "CiscoCampus>Building 9>IDEAS!",
+                            "aesUid": 723413320329068650,
+                            "isOutdoor": false,
+                            "gpsMarkers": null,
+                            "geoLocationCapable": "NO_GPS_MARKERS_PRESENT",
+                            "floorNumber": 1,
+                            "obstacles": null,
+                            "objectVersion": 0,
+                            "zones": null,
+                            "aesUidString": "723413320329068650",
+                            "calibrationModelId": 723413320329068547,
+                            "image": {
+                                "height": 1080.0,
+                                "zoomLevel": 4,
+                                "width": 568.0,
+                                "imageName": "domain_0_1462212406005.PNG",
+                                "maxResolution": 8.0,
+                                "colorDepth": 8,
+                                "size": 1080.0
+                            },
+                            "exciters": null,
+                            "accessPoints": [
+                                {
+                                    "floorIdString": "723413320329068650",
+                                    "angle": 1.57,
+                                    "name": "T1-6",
+                                    "mapCoordinates": {
+                                        "y": 69.43445,
+                                        "x": 37.544365,
+                                        "z": 15.0,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068650,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:07:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068650",
+                                    "angle": 1.57,
+                                    "name": "T1-7",
+                                    "mapCoordinates": {
+                                        "y": 69.43445,
+                                        "x": 3.5704226,
+                                        "z": 15.0,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068650,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:08:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068650",
+                                    "angle": 1.57,
+                                    "name": "T1-8",
+                                    "mapCoordinates": {
+                                        "y": 23.053333,
+                                        "x": 37.599297,
+                                        "z": 15.0,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068650,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:09:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                },
+                                {
+                                    "floorIdString": "723413320329068650",
+                                    "angle": 1.57,
+                                    "name": "T1-9",
+                                    "mapCoordinates": {
+                                        "y": 22.641666,
+                                        "x": 13.759859,
+                                        "z": 15.0,
+                                        "unit": "FEET"
+                                    },
+                                    "geoCoordinate": null,
+                                    "deviceDetails": null,
+                                    "apInterfaces": [
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 1,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 0,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 0,
+                                            "band": "IEEE_802_11_B",
+                                            "channelNumber": 1,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-2.4GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        },
+                                        {
+                                            "antennaDiversity": 3,
+                                            "txPowerLevel": 5,
+                                            "txPowerControl": 1,
+                                            "slotNumber": 1,
+                                            "channelAssignment": 1,
+                                            "antennaType": 1,
+                                            "antennaGain": 11,
+                                            "band": "IEEE_802_11_A",
+                                            "channelNumber": 64,
+                                            "antennaElevAngle": 0.0,
+                                            "antennaPattern": "Internal-1140-5.0GHz",
+                                            "antennaAngle": 1.5707964,
+                                            "antennaMode": 1,
+                                            "unit": "RADIAN",
+                                            "dualBandSlot": false
+                                        }
+                                    ],
+                                    "numOfSlots": 2,
+                                    "floorId": 723413320329068650,
+                                    "apMode": "LOCAL",
+                                    "radioMacAddress": "00:2b:01:00:0a:00",
+                                    "switchName": null,
+                                    "ipAddress": null,
+                                    "apType": 2,
+                                    "ethMacAddress": null
+                                }
+                            ],
+                            "referenceMarkers": null,
+                            "dimension": {
+                                "offsetX": 0.0,
+                                "offsetY": 0.0,
+                                "height": 15.0,
+                                "width": 39.0,
+                                "length": 74.1,
+                                "unit": "FEET"
+                            },
+                            "filterRails": null,
+                            "name": "IDEAS!"
+                        }
+                    ]
+                }
+            ],
+            "dimension": {
+                "offsetX": 0.0,
+                "offsetY": 0.0,
+                "height": 10.0,
+                "width": 8000.0,
+                "length": 8000.0,
+                "unit": "FEET"
+            }
+        }
+    ]
+}

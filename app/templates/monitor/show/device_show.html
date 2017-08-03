@@ -1,0 +1,217 @@
+{% extends "_base/base.html" %}
+{% block title %}Device Monitoring{% endblock %}
+{% block scripts %}
+<script type="text/javascript" charset="utf-8" src="{{url_for('static', filename='script/plot_asset_over_map.js')}}"></script>
+
+<script>
+    $(document).ready(function() {
+
+    var pathArray = window.location.pathname.split( '/' );
+var namespace = unescape(pathArray[pathArray.length - 1])
+
+    var expirationWhenIdle = 5;
+    var expirationWhenEngaging = 10;
+
+    var expiration = expirationWhenIdle; //seconds
+
+    var time = expiration;
+
+    var IntID;
+    function startTimer() {
+        i = setInterval( function() {
+
+            time--;
+            if (time === 0) {
+                makeRequest();
+                time = expiration
+            }
+            updateTimer(time);
+        }, 1000);
+        return i;
+    }
+
+    function stopTimer() {
+        clearInterval(IntID);
+    }
+
+    function updateTimer(time) {
+        $('#countdown').html(time);
+    }
+    updateTimer(time)
+    $("form").submit(function( event ) {
+          event.preventDefault();
+          var btn = $('#timerTrigger');
+          var btnVal = btn.val()
+
+          var newVal;
+          if (btnVal === 'Stop') {
+            newVal = 'Start';
+            stopTimer();
+
+          } else {
+            newVal = 'Stop';
+            IntID = startTimer();
+          }
+          btn.val(newVal);
+          $('#countdownContainer').toggle();
+
+    });
+
+    function showLoading() {
+        //$('#loading').show();
+    }
+
+    function hideLoading(){
+        //$('#loading').hide();
+    }
+
+
+    $('#timerTrigger').click();
+
+    $(document).on('click', '.slideTrigger', function(){
+        var div = $(this).parent().parent().find(".hierarchy-container");
+        var text;
+        if (!$(div).hasClass("hidden")) {
+            //$(div).hide();
+            $(div).addClass("hidden");
+            text = "(view details)"
+        } else {
+            //$(div).show();
+            $(div).removeClass("hidden");
+            text = "(hide details)"
+        }
+        $(this).text(text);
+    });
+
+
+    function makeRequest() {
+    $.ajax({
+        type: "GET",
+        url: "{{url_for('mod_api.client', mac_address=mac_address)}}",
+        data: {},
+        beforeSend: function() {
+            //stopTimer();
+        },
+        success: function(msg) {
+            time = expiration;
+            updateScreen(msg);
+            //hideErrorMessage();
+
+        },
+        fail: function(msg) {
+            showErrorMessage("Error when getting update");
+        },
+        always: function() {
+            alert("complete");
+        }
+    });
+}
+
+function updateScreen(msg) {
+    console.log(msg);
+    if (msg.error) {
+        showErrorMessage(msg.error);
+
+    } else {
+        //hideErrorMessage();
+        var name = null;
+        var item;
+        var location;
+        var tracked = false;
+
+        if (msg.items.registered_users.length > 0) {
+            item = msg.items.registered_users[0];
+            name = item.user_info.name
+            tracked = true;
+        } else if (msg.items.unknown_devices.length > 0) {
+            item = msg.items.unknown_devices[0];
+            name = 'Unknown device';
+            tracked = true;
+        } else {
+            name = 'Untracked device';
+            tracked = false;
+        }
+
+        if (item && item.location) {
+            location = item.location
+            $('#updated').text(location.last_modified);
+            $('#time_ago').text(location.last_modified_ago);
+            $('#hierarchy').text(location.hierarchy);
+            $('#coordX').text(Math.floor(location.coord_x));
+            $('#coordY').text(Math.floor(location.coord_y));
+            $('#origin').text(location.origin);
+        }
+
+        $('#mac').text(namespace);
+        $('#name').text(name);
+
+        if (tracked) {
+            $('.show-when-present').show();
+            var coordinate = [item.location.coord_x, item.location.coord_y];
+            var coordinates = [coordinate];
+            var specialCoordinates = [];
+
+		    plot(item.location.map_information.map_path, coordinates, [], item.location.map_information.floor_width, item.location.map_information.floor_height, item.location.map_information.floor_length, item.location.map_information.image_width, item.location.map_information.image_height);
+        } else {
+            $('.show-when-present').hide();
+        }
+
+    }
+}
+
+});
+
+</script>
+
+{% endblock %}
+{% block content %}
+<div class="w3-container w3-right">
+    <div class='w3-left hidden' id="countdownContainer">
+        <span>Reloading in ...</span>
+        <span id="countdown"></span>
+    </div>
+    <div class='w3-left hidden'  id="loading" style="display:none">
+        <img src="{{url_for('static', filename='img/loading.gif')}}" style="max-width:10%"/>
+    </div>
+    <form>
+        <input type="submit" value="Start" id="timerTrigger" />
+    </form>
+    <p style="color:red" class="hidden" id="error">Error!</p>
+</div>
+    <span id="last_updated"></span>
+    <div class="w3-left">
+        <table>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td id="name"></td>
+                </tr>
+                <tr>
+                    <td>MAC address</td>
+                    <td id="mac"></td>
+                </tr>
+                <tr class="show-when-present">
+                    <td>Hierarchy</td>
+                    <td id="hierarchy"></td>
+                </tr>
+                <tr class="show-when-present">
+                    <td>Coordinates</td>
+                    <td>(<span id="coordX"></span>, <span id="coordY"></span>)</td>
+                </tr>
+                <tr class="show-when-present">
+                    <td>Updated</td>
+                    <td><span id="time_ago"></span> ago <span id="updated" style="display: none"></span></td>
+                </tr>
+
+                <tr class="show-when-present">
+                    <td>Origin</td>
+                    <td id="origin"></td>
+                </tr>
+                <tr class="show-when-absent" style="display: none">
+                    <td><b>The device is not being currently tracked</b></td>
+                </tr>
+            </tbody>
+        </table>
+        <canvas class="show-when-present" id="map-canvas" style="widht:100%; min-width: 600px; height:400px;">Your browser does not support the canvas HTML5 element.</canvas>
+        </div>
+{% endblock %}
