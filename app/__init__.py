@@ -51,6 +51,18 @@ def get_notification_sms_phone_number():
     return app.config['NOTIFICATION_SMS_PHONE_NUMBER']
 
 
+def get_show_web_link():
+    return app.config['SHOW_WEB_LINK']
+
+
+def get_sms_enabled():
+    return app.config['SMS_ENABLED']
+
+
+def get_admin_name():
+    return app.config['ADMIN_NAME']
+
+
 def get_default_room_id():
     return app.config['SPARK_DEFAULT_ROOM_ID']
 

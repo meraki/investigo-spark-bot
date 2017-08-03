@@ -20,7 +20,7 @@ import json
 import os
 import datetime
 from app import app
-from app import get_api_spark, get_api_tropo, get_notification_sms_phone_number
+from app import get_api_spark, get_api_tropo, get_notification_sms_phone_number, get_sms_enabled, get_admin_name, get_show_web_link
 from app.database import db_session
 from app.mod_user.models import RegisteredUser
 from app.mod_api.controller import get_device_location, get_devices_divided_by_hierarchy
@@ -142,7 +142,7 @@ def command_list(message_text, room_id, person_id):
 
     else:
         post_text = 'Invalid list command. Try list users/assets or list devices'
-
+    print ('Posting on Spark... {}'.format(post_text))
     write_to_spark(room_id, None, None, post_text, post_markdown, None)
 
     return post_text
@@ -175,6 +175,7 @@ def command_add(message_text, room_id, person_id):
         pass
 
     finally:
+        print ('Posting on Spark... {}'.format(post_text))
         write_to_spark(room_id, None, None, post_text, None, None)
 
     return post_text
@@ -233,6 +234,9 @@ def command_find(message_text, room_id, person_id):
 
                 hierarchies = location['hierarchy']
                 last_modified_ago = location['last_modified_ago']
+                if (last_modified_ago == ' ' or last_modified_ago == ''):
+                    last_modified_ago = '0 seconds'
+
                 # image_path = url_for('static', filename=local_file, _external=True)
 
                 # post_files = ['http://static.dnaindia.com/sites/default/files/2015/09/15/373721-wikipedia1.png']
@@ -294,11 +298,12 @@ def command_find(message_text, room_id, person_id):
                     post_markdown += '+ **Zone**: {}\n'.format(zone_name)
                 post_markdown += '+ **Last seen**: {} ago\n'.format(last_modified_ago)
                 #post_markdown += '+ **Coordinates**: ({}, {})\n'.format(destination_x, destination_y)
-                if user_name:
-                    post_markdown += '\n \n_The staff has been notified to pick it up. Click [here]({}) for live tracking._'.format(url_for('mod_monitor.device_show', mac=mac, _external=True))
-                else:
-                    post_markdown += '\n \n_Click [here]({}) for live tracking._'.format(
-                        url_for('mod_monitor.device_show', mac=mac, _external=True))
+                if get_show_web_link():
+                    if user_name:
+                        post_markdown += '\n \n_The staff has been notified to pick it up. Click [here]({}) for live tracking._'.format(url_for('mod_monitor.device_show', mac=mac, _external=True))
+                    else:
+                        post_markdown += '\n \n_Click [here]({}) for live tracking._'.format(
+                            url_for('mod_monitor.device_show', mac=mac, _external=True))
 
                 local_file = \
                 plot_origin_and_destination_over_image(background_image_path, origin_x, origin_y, destination_x,
@@ -307,17 +312,16 @@ def command_find(message_text, room_id, person_id):
                 post_files = [local_file]
                 success = True
 
-
-
-
             else:
                 post_text = 'Device not found'
 
         if post_text is not None or post_markdown is not None:
-            if success and user_name:
+            if success and user_name and get_sms_enabled():
                 person = get_api_spark().people.get(person_id)
-                tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
-                get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
+                if person.displayName == get_admin_name():
+                    tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
+                    get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
+            print ('Posting on Spark... {}'.format(post_text))
             write_to_spark(post_room_id, post_to_person_id, post_to_person_email, post_text, post_markdown, post_files)
             if post_files:
                 os.remove(post_files[0])
@@ -325,9 +329,6 @@ def command_find(message_text, room_id, person_id):
         post_text = 'An unexpected error occurred. Please try again in a few moments.'
         traceback.print_exc()
     return post_text
-
-
-
 
 
 def parse_user_input(req):
