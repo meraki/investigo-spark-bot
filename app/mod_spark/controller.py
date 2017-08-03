@@ -40,10 +40,7 @@ mod_spark = Blueprint('mod_spark', __name__, url_prefix='/spark')
 def home():
     output = "Empty"
     try:
-        print (request)
-        print(json.dumps(request.json))
         # print(json.dumps(request.json, indent=2))
-
         parsed_input = parse_user_input(request)
 
         message = parsed_input
@@ -52,25 +49,24 @@ def home():
         # this logs the message on the console
         print ("Received: {}".format(message.text))
 
-        print("Mentioned people - {}".format(message.mentionedPeople))
+        # print("Mentioned people - {}".format(message.mentionedPeople))
         # Here you will analyze all the messages received on the room and react to them
         message_text = message.text
 
         if message.mentionedPeople:
-            print (message.mentionedPeople)
             for person_id in message.mentionedPeople:
                 person = get_api_spark().people.get(person_id)
                 target = person.displayName
-                print ('Looking for {} on {}'.format(target, message_text))
+                # print ('Looking for {} on {}'.format(target, message_text))
                 new_message_text = message_text.replace(target, '', 1).strip()
 
-                print ('Result = {}'.format(new_message_text))
+                # print ('Result = {}'.format(new_message_text))
 
                 if new_message_text == message_text:
                     target = person.displayName.split(' ')[0]
-                    print ('Looking for {} on {}'.format(person.displayName.split(' ')[0], new_message_text))
+                    # print ('Looking for {} on {}'.format(person.displayName.split(' ')[0], new_message_text))
                     new_message_text = message_text.replace(target, '', 1).strip()
-                    print ('Result = {}'.format(new_message_text))
+                    # print ('Result = {}'.format(new_message_text))
 
                 message_text = new_message_text
 
@@ -219,7 +215,6 @@ def command_find(message_text, room_id, person_id):
 
         if mac:
             location = get_device_location(mac, True)
-            print(location)
             # print(json.dumps(location, indent=2))
             location = location['unknown_devices'] + location['registered_users']
             if len(location) > 0:
