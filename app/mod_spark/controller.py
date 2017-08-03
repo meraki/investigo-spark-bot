@@ -40,8 +40,8 @@ mod_spark = Blueprint('mod_spark', __name__, url_prefix='/spark')
 def home():
     output = "Empty"
     try:
-
-        print (request.json)
+        print (request)
+        print(json.dumps(request.json))
         # print(json.dumps(request.json, indent=2))
 
         parsed_input = parse_user_input(request)
