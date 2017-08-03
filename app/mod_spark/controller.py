@@ -298,12 +298,7 @@ def command_find(message_text, room_id, person_id):
                     post_markdown += '+ **Zone**: {}\n'.format(zone_name)
                 post_markdown += '+ **Last seen**: {} ago\n'.format(last_modified_ago)
                 #post_markdown += '+ **Coordinates**: ({}, {})\n'.format(destination_x, destination_y)
-
-                print ('Show web link? {}'.format(get_show_web_link()))
-                show_web_link = get_show_web_link()
-                print (show_web_link)
-                print (type(show_web_link))
-                if show_web_link:
+                if get_show_web_link():
                     if user_name:
                         post_markdown += '\n \n_The staff has been notified to pick it up. Click [here]({}) for live tracking._'.format(url_for('mod_monitor.device_show', mac=mac, _external=True))
                     else:
@@ -322,9 +317,7 @@ def command_find(message_text, room_id, person_id):
 
         if post_text is not None or post_markdown is not None:
             if success and user_name and get_sms_enabled():
-                print ('get sms enabled? {}'.format(get_sms_enabled()))
                 person = get_api_spark().people.get(person_id)
-                print ('get admin name {}'.format(get_admin_name()))
                 if person.displayName == get_admin_name():
                     tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
                     get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
