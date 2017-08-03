@@ -52,26 +52,38 @@ def home():
         # this logs the message on the console
         print ("Received: {}".format(message.text))
 
+        print("Mentioned people - {}".format(message.mentionedPeople))
         # Here you will analyze all the messages received on the room and react to them
         message_text = message.text
 
-        try:
+        if message.mentionedPeople:
             print (message.mentionedPeople)
-            print (message.toPersonEmail)
-            print (message.toPersonId)
-        except:
-            pass
+            for person_id in message.mentionedPeople:
+                person = get_api_spark().people.get(person_id)
+                target = person.displayName
+                print ('Looking for {} on {}'.format(target, message_text))
+                new_message_text = message_text.replace(target, '', 1).strip()
+
+                print ('Result = {}'.format(new_message_text))
+
+                if new_message_text == message_text:
+                    target = person.displayName.split(' ')[0]
+                    print ('Looking for {} on {}'.format(person.displayName.split(' ')[0], new_message_text))
+                    new_message_text = message_text.replace(target, '', 1).strip()
+                    print ('Result = {}'.format(new_message_text))
+
+                message_text = new_message_text
 
         first_word = message_text.lower().strip()
 
         if first_word.startswith('find'):
-            output = command_find(message)
+            output = command_find(message_text, message.roomId, message.personId)
 
         elif first_word.startswith('list'):
-            output = command_list(message)
+            output = command_list(message_text, message.roomId, message.personId)
 
         elif first_word.startswith('add'):
-            output = command_add(message)
+            output = command_add(message_text, message.roomId, message.personId)
 
         if not output:
             output = 'Command not identified'
@@ -83,8 +95,7 @@ def home():
     return output
 
 
-def command_list(message):
-    message_text = message.text
+def command_list(message_text, room_id, person_id):
     second_word = __replace_string_case_insensitive(message_text, 'list', '').strip().lower()
     post_markdown = None
     post_text = None
@@ -136,15 +147,14 @@ def command_list(message):
     else:
         post_text = 'Invalid list command. Try list users/assets or list devices'
 
-    write_to_spark(message.roomId, None, None, post_text, post_markdown, None)
+    write_to_spark(room_id, None, None, post_text, post_markdown, None)
 
     return post_text
 
 
-def command_add(message):
+def command_add(message_text, room_id, person_id):
     post_text = 'Command not valid... Usage = add user/asset name MAC_address phone[optional]'
     try:
-        message_text = message.text.strip()
         message_pieces = message_text.split(' ')
         second_word = message_pieces[1].lower()
         if second_word in ['user', 'asset', 'user/asset']:
@@ -169,27 +179,25 @@ def command_add(message):
         pass
 
     finally:
-        write_to_spark(message.roomId, None, None, post_text, None, None)
+        write_to_spark(room_id, None, None, post_text, None, None)
 
     return post_text
 
 
-def command_find(message):
+def command_find(message_text, room_id, person_id):
     try:
 
         success = False
-
 
         post_to_person_id = None  #
         post_to_person_email = None
         post_text = None
         post_markdown = None
         post_files = None
-        post_room_id = message.roomId
+        post_room_id = room_id
 
         user_name = None
 
-        message_text = message.text
         message_text = message_text.replace('find', '').strip()
 
         message_text = __replace_string_case_insensitive(message_text, 'find', '').strip()
@@ -211,6 +219,7 @@ def command_find(message):
 
         if mac:
             location = get_device_location(mac, True)
+            print(location)
             # print(json.dumps(location, indent=2))
             location = location['unknown_devices'] + location['registered_users']
             if len(location) > 0:
@@ -311,7 +320,7 @@ def command_find(message):
 
         if post_text is not None or post_markdown is not None:
             if success and user_name:
-                person = get_api_spark().people.get(message.personId)
+                person = get_api_spark().people.get(person_id)
                 tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
                 get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
             write_to_spark(post_room_id, post_to_person_id, post_to_person_email, post_text, post_markdown, post_files)
@@ -355,8 +364,6 @@ def parse_user_input(req):
 def read_from_spark(message_id):
     try:
         message = get_api_spark().messages.get(message_id)
-        print(json.dumps(message, indent=2))
-
     except:
         raise Exception("Error while trying to READ from Spark.")
     return message
