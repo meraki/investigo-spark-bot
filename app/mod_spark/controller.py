@@ -41,7 +41,8 @@ def home():
     output = "Empty"
     try:
 
-        print(json.dumps(request.json, indent=2))
+        print (request.json)
+        # print(json.dumps(request.json, indent=2))
 
         parsed_input = parse_user_input(request)
 
@@ -354,6 +355,7 @@ def parse_user_input(req):
 def read_from_spark(message_id):
     try:
         message = get_api_spark().messages.get(message_id)
+        print(json.dumps(message, indent=2))
 
     except:
         raise Exception("Error while trying to READ from Spark.")
