@@ -320,7 +320,7 @@ def command_find(message_text, room_id, person_id):
             if success and user_name and get_sms_enabled():
                 print ('get sms enabled? {}'.format(get_sms_enabled()))
                 person = get_api_spark().people.get(person_id)
-                print ('get admin name {}'.foramt(get_admin_name()))
+                print ('get admin name {}'.format(get_admin_name()))
                 if person.displayName == get_admin_name():
                     tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
                     get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
