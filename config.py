@@ -14,8 +14,8 @@ class Config(object):
     ON_CISCO_NETWORK = os.environ.get('ON_CISCO_NETWORK', False)
     NOTIFICATION_SMS_PHONE_NUMBER = os.environ.get('NOTIFICATION_SMS_PHONE_NUMBER', False)
     SPARK_DEFAULT_ROOM_ID = os.environ.get('SPARK_DEFAULT_ROOM_ID', False)
-    SMS_ENABLED = os.environ.get('SMS_ENABLED', False)
-    SHOW_WEB_LINK = os.environ.get('SHOW_WEB_LINK', False)
+    SMS_ENABLED = bool(os.environ.get('SMS_ENABLED', False))
+    SHOW_WEB_LINK = bool(os.environ.get('SHOW_WEB_LINK', False))
     ADMIN_NAME = os.environ.get('ADMIN_NAME', '')
     MERAKI_VALIDATOR_TOKEN = os.environ.get('MERAKI_VALIDATOR', "TOKEN-NOT-PROVIDED")
 
