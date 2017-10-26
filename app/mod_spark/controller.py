@@ -81,6 +81,9 @@ def home():
         elif first_word.startswith('add'):
             output = command_add(message_text, message.roomId, message.personId)
 
+        elif first_word.startswith('help'):
+            output = command_help(message.roomId)
+
         if not output:
             output = 'Command not identified'
             write_to_spark(room_id=room_id_received_on_message, text=output)
@@ -177,6 +180,32 @@ def command_add(message_text, room_id, person_id):
     finally:
         print ('Posting on Spark... {}'.format(post_text))
         write_to_spark(room_id, None, None, post_text, None, None)
+
+    return post_text
+
+
+def command_help(room_id):
+    try:
+        post_text = 'Available commands: "help"; "list assets"; "find asset [asset_name]"; "find asset [mac_address]"'
+        post_markdown = """        
+# Hi! My name is Investigo. Nice to meet you!
+Here is a list of things I can do:
+
++ **list assets**: gives a list of registered assets;
++ **find asset _[asset_name]_**: finds the asset based on its name;
++ **find _[mac_address]_**: finds the asset based on its MAC Address;
+
+Examples:
+
+> list assets
+
+> find asset defibrillator
+
+> find 00:00:2a:01:00:32        
+"""
+    finally:
+        print ('Posting on Spark... {}'.format(post_text))
+        write_to_spark(room_id, None, None, post_text, post_markdown, None)
 
     return post_text
 
@@ -351,6 +380,8 @@ def parse_user_input(req):
         # Get the json data from HTTP request. This is what was written on the Spark room, which you are monitoring.
         request_json = req.json
         message_id = request_json["data"]["id"]
+        #print (json.dumps(request_json, indent=2))
+        #print (message_id)
         # At first, Spark does not give the message itself, but it gives the ID of the message. We need to ask for the content of the message
         message = read_from_spark(message_id)
         output = message
@@ -359,8 +390,10 @@ def parse_user_input(req):
 
 def read_from_spark(message_id):
     try:
-        message = get_api_spark().messages.get(message_id)
+        spark_api = get_api_spark()
+        message = spark_api.messages.get(message_id)
     except:
+        traceback.print_exc()
         raise Exception("Error while trying to READ from Spark.")
     return message
 
