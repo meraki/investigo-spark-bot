@@ -34,7 +34,7 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 
 def get_api_cmx(cmx_server=None):
     if not cmx_server:
-        cmx_server = get_controller()
+        cmx_server = get_cmx_controller()
 
     return CMXAPICaller(cmx_server.name, cmx_server.url, cmx_server.username, cmx_server.password)
 
@@ -75,14 +75,29 @@ def get_secret_key():
     return app.config['SECRET_KEY']
 
 
-def get_controller():
+def get_cmx_controller():
     from app.models import CMXServer
     db_controller = db_session.query(CMXServer).filter(CMXServer.active).first()
     return db_controller
 
 
+def get_meraki_controller():
+    return None
+
+
+def get_controller_status():
+    if get_cmx_controller() is not None:
+        server = 'On-premises'
+    elif get_meraki_controller() is not None:
+        server = 'Cloud'
+    else:
+        server = 'None'
+    return server
+
+
 from app.models import CMXServer, DeviceLocation, DeviceLocationHistory, CMXSystem, Campus
 from app.mod_cmx_server.controller import mod_cmx_server as cmx_server_mod
+from app.mod_meraki_server.controller import mod_meraki_server as meraki_server_mod
 from app.mod_cmx_notification.controller import mod_cmx_notification as cmx_notification_mod
 from app.mod_api.controller import mod_api as api_mod
 from app.mod_monitor.controller import mod_monitor as monitor_mod
@@ -97,6 +112,7 @@ from app.mod_api import controller as api_controller
 
 # Register blueprint(s)
 app.register_blueprint(cmx_server_mod)
+app.register_blueprint(meraki_server_mod)
 app.register_blueprint(api_mod)
 app.register_blueprint(cmx_notification_mod)
 app.register_blueprint(monitor_mod)
@@ -148,7 +164,7 @@ def before_request():
     bp = request.blueprint
     # Exempting requests on the root '/something'. i.e. bp = None
     if bp and bp not in [cmx_notification_mod.name, user_mod.name, api_mod.name, error_mod.name, cmx_server_mod.name, server_mod.name]:
-        if get_controller() is None:
+        if get_cmx_controller() is None:
             return redirect(url_for('mod_error.home', message='You need to set a server'))
 
 

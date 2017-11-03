@@ -16,7 +16,7 @@
 import traceback, json, datetime
 from flask import Blueprint, Response, url_for
 from app.database import db_session, db_engine
-from app import get_api_cmx
+from app import get_api_cmx, get_cmx_controller, get_meraki_controller
 from app.mod_cmx_notification.models import CMXNotification
 from app.mod_user.models import RegisteredUser
 from app.models import DeviceLocation, Floor
@@ -71,6 +71,21 @@ def engagement(hierarchy, mac_address=None):
     output = {}
 
     return json.dumps(output)
+
+
+@mod_api.route('/status')
+def get_server_status():
+    if get_cmx_controller() is not None:
+        server = 'On-premises'
+    elif get_meraki_controller() is not None:
+        server = 'Cloud'
+    else:
+        server = 'None'
+
+    output = {}
+    output["server_type"] = server
+
+    return Response(json.dumps(output), mimetype='application/json')
 
 
 def get_device_location(mac_address, use_asynchronous_data=False):
@@ -211,7 +226,6 @@ def get_devices_divided_by_hierarchy(use_asynchronous_data=True, hierarchy=None)
     for i in items['unknown_devices']:
         current_hierarchy = __filter_hierarchy(i['location']['hierarchy'], hierarchies, current_hierarchy)
         current_hierarchy['unknown_devices'].append(i)
-
 
     if hierarchy:
         try:

@@ -1,5 +1,5 @@
 <div class="w3-top">
-<ul class="w3-navbar w3-black w3-card-2 w3-left-align">
+<ul class="w3-navbar w3-card-2 w3-left-align">
     <li class="w3-hide-medium w3-hide-large w3-opennav w3-right">
         <a class="w3-padding-large" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
     </li>
@@ -18,19 +18,20 @@
   </li>
     <li class="w3-hide-small"><a href="{{url_for('mod_user.show')}}" class=" w3-padding-large">USERS</a></li>
     <li class="w3-hide-small"><a href="{{url_for('mod_simulation.add')}}" class=" w3-padding-large">SIMULATION</a></li>
-    <li class="w3-hide-small"><a href="{{url_for('mod_cmx_server.show')}}" class=" w3-padding-large">SETTINGS</a></li>
+    <li class="w3-hide-small"><a href="{{url_for('mod_server.select')}}" class=" w3-padding-large">SETTINGS</a></li>
 </ul>
 </div>
 
 <!-- Navbar on small screens -->
 <div id="navDemo" class="w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
-  <ul class="w3-navbar w3-left-align w3-black">
+  <ul class="w3-navbar w3-left-align">
     <li><a class="w3-padding-large" href="{{url_for('mod_monitor.overview')}}">OVERVIEW</a></li>
       <li><a class="w3-padding-large" href="{{url_for('mod_monitor.device_select')}}">DEVICE</a></li>
       <li><a class="w3-padding-large" href="{{url_for('mod_monitor.hierarchy_select')}}">HIERARCHY</a></li>
     <li><a class="w3-padding-large" href="{{url_for('mod_engagement.home')}}">ENGAGEMENT</a></li>
     <li><a class="w3-padding-large" href="{{url_for('mod_user.show')}}">USERS</a></li>
     <li><a class="w3-padding-large" href="{{url_for('mod_simulation.add')}}">SIMULATION</a></li>
-      <li><a class="w3-padding-large" href="{{url_for('mod_cmx_server.show')}}">SETTINGS</a></li>
+      <li><a class="w3-padding-large" href="{{url_for('mod_server.select')}}">SETTINGS</a></li>
   </ul>
 </div>
+

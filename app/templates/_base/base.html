@@ -13,7 +13,6 @@
 
 <script src="{{url_for('static', filename='script/external/jquery-3.1.1.min.js')}}"></script>
 <script type="text/javascript" charset="utf-8" src="{{ url_for('static', filename='script/base.js') }}"></script>
-<script type="text/javascript" charset="utf-8"  src="{{url_for('static', filename='script/base.js')}}"></script>
 
 {% include '_base/favicon.html' %}
 {% block style %}{% endblock %}
@@ -36,15 +35,48 @@
         </div>
     </div>
 <script>
-    // Used to toggle the menu on small screens when clicking on the menu button
-function myFunction() {
-    var x = document.getElementById("navDemo");
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-    } else {
-        x.className = x.className.replace(" w3-show", "");
+$(document).ready(function(){
+    $.ajax({
+       type: "GET",
+       url: "{{url_for('mod_api.get_server_status')}}",
+       data: {},
+       beforeSend: function(){
+         //
+       },
+       complete: function(){
+         //
+       },
+       success: function(msg){
+
+         changeNavBarColor(msg.server_type);
+
+       },
+       fail: function(msg) {
+         console.log('Fail to get server status')
+       }
+    });
+
+    function changeNavBarColor(value) {
+        console.log(value);
+
+        var color = 'blue';
+
+        if (value == 'On-premises') {
+            color = 'black';
+        } else if (value == 'Cloud') {
+            color = 'green';
+        } else {
+            color = 'gray';
+        }
+
+        $(".w3-navbar").each(function( index ) {
+          $(this).removeClass('w3-black');
+          $(this).removeClass('w3-green');
+          $(this).removeClass('w3-gray');
+          $(this).addClass('w3-' + color);
+        });
     }
-}
+});
 </script>
 </body>
 </html>

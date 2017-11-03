@@ -16,12 +16,13 @@
 from flask import Blueprint, request, render_template, session, redirect
 
 import app
-
+from app import get_controller_status
 
 mod_server = Blueprint('mod_server', __name__, url_prefix='/server')
 
 
 @mod_server.route('/', methods=['GET'])
 def select():
-    output = render_template("server/select.html")
+
+    output = render_template("server/select.html", server=get_controller_status())
     return output

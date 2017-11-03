@@ -4,6 +4,9 @@
 {% block scripts %}{% endblock %}
 {% block subsection_title %}Select your deployment{% endblock %}
 {% block content %}
+
+<h2>Current deployment: <b>{{server}}</b></h2>
+
 <p><a href="{{url_for('mod_cmx_server.show')}}">On-premises (CMX)</a></p>
 <p><a href="#">Cloud (Meraki)</a></p>
 {% endblock %}
