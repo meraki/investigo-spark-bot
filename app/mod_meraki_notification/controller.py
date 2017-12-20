@@ -21,7 +21,7 @@ from app.database import db_session
 from app import get_meraki_validator_token, get_secret_key
 #from app.mod_meraki_notification.models import CMXNotification
 
-mod_meraki_notification = Blueprint('mod_meraki_notification', __name__, url_prefix='/meraki')
+mod_meraki_notification = Blueprint('mod_meraki_notification', __name__, url_prefix='/meraki_old')
 
 @mod_meraki_notification.route('/', methods=['GET', 'POST'])
 def meraki():

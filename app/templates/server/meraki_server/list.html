@@ -1,32 +1,23 @@
 {% extends "_base/base.html" %}
-{% block title %}Registered CMX Servers{% endblock %}
+{% block title %}Registered {{deployment}} Servers{% endblock %}
 {% block style %}{% endblock %}
 {% block scripts %}{% endblock %}
-{% block subsection_title %}CMX Server{% endblock %}
+{% block subsection_title %}{{deployment}} Server{% endblock %}
 {% block subsection_subtitle %}{{object|length}} Networks Available{% endblock %}
 {% block content %}
 <div class="w3-left">
-    <a class="w3-center" href="{{url_for('mod_cmx_server.add')}}">Add a CMX Server</a>
+    <a class="w3-center" href="{{url_for('mod_meraki_server.add')}}">Add {{deployment}} Server</a>
 </div>
 <div class="w3-left">
     {% if object|length > 0%}
         <ol>
         {% for item in object %}
-
-
-
                 {% if item.active %}
                     <li style="color:green">{{ item.name }} ({{item.url}})
                 {% else %}
                     <li>{{ item.name }} ({{item.url}})
                 {% endif %}
-
-
-                | <a href="{{url_for('mod_cmx_server.details', server_id=item.id)}}">details</a> | <a href="{{url_for('mod_cmx_server.edit', server_id=item.id)}}">edit</a> | <a href="{{url_for('mod_cmx_server.delete', server_id=item.id)}}">delete</a>
-
-
-
-
+                | <a href="{{url_for('mod_meraki_server.details', server_id=item.id)}}">details</a> | <a href="{{url_for('mod_meraki_server.edit', server_id=item.id)}}">edit</a> | <a href="{{url_for('mod_meraki_server.verticalization', server_id=item.id)}}">verticalization</a> | <a href="{{url_for('mod_meraki_server.delete', server_id=item.id)}}">delete</a>
             </li>
         {% endfor %}
         </ol>

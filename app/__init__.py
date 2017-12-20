@@ -24,6 +24,7 @@ from app.database import db_session
 from externalapis.CMXAPICaller import CMXAPICaller
 from ciscosparkapi import CiscoSparkAPI
 from externalapis.TropoAPICaller import TropoAPICaller
+from externalapis.meraki import MerakiHQDemoExtractor
 
 app = Flask(__name__)
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_top
@@ -37,6 +38,15 @@ def get_api_cmx(cmx_server=None):
         cmx_server = get_cmx_controller()
 
     return CMXAPICaller(cmx_server.name, cmx_server.url, cmx_server.username, cmx_server.password)
+
+
+def get_api_meraki(meraki_server=None):
+    if not meraki_server:
+        meraki_server = get_meraki_controller()
+    if meraki_server.demo_server:
+        if meraki_server.name == "Meraki HQ" and "live-map.meraki.com" in meraki_server.demo_server_url:
+            return MerakiHQDemoExtractor()
+    raise Exception("Feature not ready")
 
 
 def get_api_spark():
@@ -82,7 +92,9 @@ def get_cmx_controller():
 
 
 def get_meraki_controller():
-    return None
+    from app.models import MerakiServer
+    db_controller = db_session.query(MerakiServer).filter(MerakiServer.active).first()
+    return db_controller
 
 
 def get_controller_status():
@@ -95,7 +107,7 @@ def get_controller_status():
     return server
 
 
-from app.models import CMXServer, DeviceLocation, DeviceLocationHistory, CMXSystem, Campus
+from app.models import CMXServer
 from app.mod_cmx_server.controller import mod_cmx_server as cmx_server_mod
 from app.mod_meraki_server.controller import mod_meraki_server as meraki_server_mod
 from app.mod_cmx_notification.controller import mod_cmx_notification as cmx_notification_mod
@@ -107,6 +119,7 @@ from app.mod_engagement.controller import mod_engagement as engagement_mod
 from app.mod_error.controller import mod_error as error_mod
 from app.mod_spark.controller import mod_spark as spark_mod
 from app.mod_server.controller import mod_server as server_mod
+from app.mod_statistics.controller import mod_statistics as stats_mod
 
 from app.mod_api import controller as api_controller
 
@@ -122,6 +135,7 @@ app.register_blueprint(engagement_mod)
 app.register_blueprint(error_mod)
 app.register_blueprint(spark_mod)
 app.register_blueprint(server_mod)
+app.register_blueprint(stats_mod)
 
 # app.register_blueprint(xyz_module)
 # ..
@@ -163,7 +177,7 @@ def before_first_request():
 def before_request():
     bp = request.blueprint
     # Exempting requests on the root '/something'. i.e. bp = None
-    if bp and bp not in [cmx_notification_mod.name, user_mod.name, api_mod.name, error_mod.name, cmx_server_mod.name, server_mod.name]:
+    if bp and bp not in [cmx_notification_mod.name, user_mod.name, api_mod.name, error_mod.name, cmx_server_mod.name, meraki_server_mod.name, server_mod.name]:
         if get_cmx_controller() is None:
             return redirect(url_for('mod_error.home', message='You need to set a server'))
 

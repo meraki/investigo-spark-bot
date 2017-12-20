@@ -119,55 +119,9 @@ function getVerticalsValues(vertical, language) {
 </script>
 
 {% endblock %}
-{% block subsection_title %}CMX Server{% endblock %}
+{% block subsection_title %}{{deployment}} Server{% endblock %}
 {% block subsection_subtitle %}Edit an instance{% endblock %}
 {% block content %}
-<div class="w3-container">
-    <form method="post" id="server_info">
-        <table>
-            <tr>
-                <td>Name: </td>
-                <td>
-                    <input type="text" name="cmx_server_name" value="{{object.name}}"/>
-                </td>
-            </tr>
-            <tr>
-                <td>URL: </td>
-                <td><input type="text" name="cmx_server_url" value="{{object.url}}" readonly/></td>
-            </tr>
-            <tr>
-                <td>API Username: </td>
-                <td><input type="text" name="cmx_server_username" value="{{object.username}}" readonly/></td>
-            </tr>
-
-            <tr>
-                <td>Externally accessible?</td>
-                <td>
-                    <select name="cmx_server_externally_accessible">
-                        <option value="True" {%if object.externally_accessible %} selected {%endif%}>Yes</option>
-                        <option value="False" {%if not object.externally_accessible %} selected {%endif%}>No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>Active</td>
-                <td>
-                    <select name="cmx_server_active">
-                        <option value="True">Yes</option>
-                        <option value="False">No</option>
-                    </select>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <input type="submit"/>
-                    <input type="hidden" name="cmx_server_id" value="{{object.id}}"/>
-                </td>
-            </tr>
-        </table>
-    </form>
-</div>
-<hr style="border-top: 1px dashed #8c8b8b;">
 <div class="w3-container" id="verticalization_container">
     <h3>Verticalization</h3>
     <div id="pre_defined_form_container" class="" >

@@ -1,0 +1,91 @@
+{
+   "version":0,
+   "campuses":[
+      {
+         "aesUid":723413320329068588,
+         "name":"Meraki HQ",
+         "aesUidString":"723413320329068588",
+         "buildingList":[
+            {
+               "aesUid":723413320329068589,
+               "name":"San Francisco",
+               "image":null,
+               "objectVersion":0,
+               "aesUidString":"723413320329068589",
+               "hierarchyName":"Meraki HQ>San Francisco",
+               "dimension":{
+                  "offsetX":0.0,
+                  "offsetY":0.0,
+                  "height":10.0,
+                  "width":307.0,
+                  "length":81.9,
+                  "unit":"FEET"
+               },
+               "floorList":[
+                  {
+                     "aesUid":723413320329068589,
+                     "name":"1st Floor",
+                     "hierarchyName":"Meraki HQ>San Francisco>1st Floor",
+                     "floorNumber":1,
+                     "zones":[
+
+                     ],
+                     "aesUidString":"723413320329068590",
+                     "image":{
+                        "height":544.0,
+                        "zoomLevel":4,
+                        "width":2038.0,
+                        "imageName":"domain_0_1421088463647.png",
+                        "maxResolution":8.0,
+                        "colorDepth":8,
+                        "size":2038.0
+                     },
+                     "dimension":{
+                        "offsetX":0.0,
+                        "offsetY":0.0,
+                        "height":16.5,
+                        "width":307.0,
+                        "length":81.9,
+                        "unit":"FEET"
+                     },
+                     "gpsMarkers":[
+                        {
+                           "name":"NW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"NE",
+                           "geoCoordinate":{
+                              "latitude":37.77079107,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SE",
+                           "geoCoordinate":{
+                              "latitude":37.77005747,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        }
+                     ]
+                  }
+               ]
+            }
+         ]
+      }
+   ]
+}

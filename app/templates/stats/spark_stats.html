@@ -1,0 +1,18 @@
+{% extends "_base/base.html" %}
+{% block title %}Registered Users{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}Spark Commands{% endblock %}
+{% block subsection_subtitle %}{{object|length}} Commands{% endblock %}
+{% block content %}
+<div class="w3-left">
+
+    {% if object|length > 0%}
+        <ol>
+        {% for item in object %}
+            <li>{{ item.command_category }}</li>
+        {% endfor %}
+        </ol>
+    {% endif %}
+</div>
+{% endblock %}

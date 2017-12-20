@@ -26,6 +26,12 @@ mod_api = Blueprint('mod_api', __name__, url_prefix='/api')
 expiration_time = 5  # 5 seconds
 
 
+@mod_api.before_request
+def before_request():
+    if is_time_to_update():
+        update_tables()
+
+
 @mod_api.route('/hierarchy/<hierarchy>')
 @mod_api.route('/hierarchy')
 def clients_hierarchy(hierarchy=None):
@@ -69,7 +75,6 @@ def client(mac_address):
 @mod_api.route('/engagement/<hierarchy>')
 def engagement(hierarchy, mac_address=None):
     output = {}
-
     return json.dumps(output)
 
 
@@ -281,12 +286,6 @@ def update_tables():
             db_session.add(location)
     db_session.query(CMXNotification).delete()
     db_session.commit()
-
-
-@mod_api.before_request
-def before_request():
-    if is_time_to_update():
-        update_tables()
 
 
 def __serialize_devices_users(result):

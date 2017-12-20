@@ -2,7 +2,7 @@
 {% block title %}System Settings{% endblock %}
 {% block style %}{% endblock %}
 {% block scripts %}{% endblock %}
-{% block subsection_title %}CMX Server{% endblock %}
+{% block subsection_title %}{{deployment}} Server{% endblock %}
 {% block subsection_subtitle %}Add an instance{% endblock %}
 {% block content %}
 <script>
@@ -22,18 +22,21 @@ $.fn.serializeObject = function()
     });
     return o;
 };
-
-
 $(document).ready(function(){
-
-// Attach a submit handler to the form
-
     $("form").submit(function( event ) {
       event.preventDefault();
       payload = JSON.stringify($(this).serializeObject())
-      $.ajax({
+      var form_id = $(this).attr('id');
+      /*
+      if (form_id == 'add_legit_server') {
+        alert("Under construction");
+
+      } else {
+      }
+      */
+    $.ajax({
         type: 'POST',
-        url: '{{url_for('mod_cmx_server.add')}}',
+        url: '{{url_for('mod_meraki_server.add')}}',
         data: payload,
         contentType: "application/json",
         dataType: 'json',
@@ -44,65 +47,49 @@ $(document).ready(function(){
                 window.location = data.redirect_url
             }
         }
-
         });
+
     });
 });
 </script>
 
-
-<form id="form" method="post">
+<form id="add_demo" method="post">
+    <table>
+        <tr>
+            <td>
+                <input type="submit" value="USE DEMO NETWORK"/>
+            </td>
+            <input type="hidden" name="fake_server" value="True"/>
+        </tr>
+    </table>
+</form>
+<hr style="border-top: 1px dashed #8c8b8b;">
+<form id="add_legit_server" method="post">
     <table>
         <tr>
             <td>Name: </td>
             <td>
-                <input type="text" name="cmx_server_name" />
+                <input type="text" name="meraki_server_name" value="" />
             </td>
         </tr>
         <tr>
-            <td>URL: </td>
-            <td><input type="text" name="cmx_server_url"/></td>
+            <td>Organization ID: </td>
+            <td><input type="text" name="meraki_server_org_id" value="" /></td>
         </tr>
         <tr>
-            <td>API Username: </td>
-            <td><input type="text" name="cmx_server_username"/></td>
+            <td>Network ID: </td>
+            <td><input type="text" name="meraki_server_network_id" value=""/></td>
         </tr>
         <tr>
-            <td>API Password: </td>
-            <td><input type="password" name="cmx_server_password"/></td>
-        </tr>
-        <tr>
-            <td>Externally accessible?</td>
-            <td>
-                <select name="cmx_server_externally_accessible">
-                    <option value="True">Yes</option>
-                    <option value="False" selected>No</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Active</td>
-            <td>
-                <select name="cmx_server_active">
-                    <option value="True" selected>Yes</option>
-                    <option value="False">No</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td>Subscribe for Notifications</td>
-            <td>
-                <select name="cmx_server_subscribe">
-                    <option value="True">Yes</option>
-                    <option value="False" selected>No</option>
-                </select>
-            </td>
+            <td>API Key: </td>
+            <td><input type="text" name="meraki_server_api_key" value=""/></td>
         </tr>
         <tr>
             <td>
                 <input type="submit"/>
             </td>
         </tr>
+        <input type="hidden" name="fake_server" value="False"/>
     </table>
 </form>
 {% endblock %}

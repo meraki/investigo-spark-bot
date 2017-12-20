@@ -1,0 +1,173 @@
+{% extends "_base/base.html" %}
+{% block title %}System Settings{% endblock %}
+{% block style %}
+<style>
+    #verticalization_container {
+
+    }
+    #pre_defined_form_container {
+    }
+
+    #zones_containers {
+        width: 100%;
+    }
+    .floor_name {
+        text-align: center;
+        font-weight: bold;
+    }
+</style>
+{% endblock %}
+{% block scripts %}
+<script type="text/javascript">
+$.fn.serializeObject = function()
+{
+    var o = {};
+    var a = this.serializeArray();
+    $.each(a, function() {
+        if (o[this.name] !== undefined) {
+            if (!o[this.name].push) {
+                o[this.name] = [o[this.name]];
+            }
+            o[this.name].push(this.value || '');
+        } else {
+            o[this.name] = this.value || '';
+        }
+    });
+    return o;
+};
+
+
+$(document).ready(function(){
+
+var verticals_json;
+
+$.getJSON("{{url_for('static', filename='server_config/verticalization.json')}}", function(json){
+    verticals_json = json;
+});
+
+function getVerticalsValues(vertical, language) {
+   var output = null;
+   for (var i = 0; i < verticals_json.length; i++) {
+       var v = verticals_json[i];
+       if (vertical.toLowerCase() === v.vertical) {
+            var items = v.items;
+            for (var j = 0; j < items.length; j++) {
+                var item = items[j];
+                if (item.language.toLowerCase() === language.toLowerCase()) {
+                    output = item.vertical_names.zones;
+                    break;
+                }
+            }
+       }
+   }
+    return output;
+}
+
+
+
+// Attach a submit handler to the form
+    $("form").submit(function( event ) {
+      event.preventDefault();
+        var form_id = $(this).attr('id');
+        payload = JSON.stringify($(this).serializeObject());
+        if (form_id == 'pre_defined_form') {
+            var vertical = $("#predefined_vertical").val()
+            var language = $("#predefined_language").val()
+
+            $("#language").val(language);
+            $("#vertical").val(vertical);
+
+            var vertical_names = getVerticalsValues(vertical, language);
+            var i = 0;
+            $('.vertical_name').each(function( index, value ) {
+              $(this).val(vertical_names[i++]);
+              if (i > vertical_names.length) {
+                i = 0;
+              }
+            });
+            $('.occupancy').each(function( index, value ) {
+              $(this).val(Math.floor((Math.random() * 10) + 1));
+            });
+        } else  {
+         var url = null;
+         if (form_id == 'remove_verticalization') {
+            url = '{{url_for("mod_cmx_server.verticalization_remove", server_id = object.id)}}';
+         } else if (form_id == 'server_info') {
+            url = '{{url_for('mod_cmx_server.add')}}';
+         } else if (form_id == 'verticalization_form') {
+            url = 'none';
+            url = '{{url_for("mod_cmx_server.verticalization_add", server_id = object.id)}}';
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data: payload,
+            contentType: "application/json",
+            dataType: 'json',
+            success: function(data) {
+                if (data.error) {
+                    alert("Error!\n" + data.error_message);
+                } else {
+                    window.location = data.redirect_url
+                }
+            }
+            });
+        }
+    });
+});
+</script>
+
+{% endblock %}
+{% block subsection_title %}{{deployment}} Server{% endblock %}
+{% block subsection_subtitle %}Edit an instance{% endblock %}
+{% block content %}
+<div class="w3-container">
+    <form method="post" id="server_info">
+        <table>
+            <tr>
+                <td>Name: </td>
+                <td>
+                    <input type="text" name="cmx_server_name" value="{{object.name}}"/>
+                </td>
+            </tr>
+            <tr>
+                <td>URL: </td>
+                <td><input type="text" name="cmx_server_url" value="{{object.url}}" readonly/></td>
+            </tr>
+            <tr>
+                <td>API Username: </td>
+                <td><input type="text" name="cmx_server_username" value="{{object.username}}" readonly/></td>
+            </tr>
+
+            <tr>
+                <td>Externally accessible?</td>
+                <td>
+                    <select name="cmx_server_externally_accessible">
+                        <option value="True" {%if object.externally_accessible %} selected {%endif%}>Yes</option>
+                        <option value="False" {%if not object.externally_accessible %} selected {%endif%}>No</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>Active</td>
+                <td>
+                    <select name="cmx_server_active">
+                        <option value="True">Yes</option>
+                        <option value="False">No</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="submit"/>
+                    <input type="hidden" name="cmx_server_id" value="{{object.id}}"/>
+                </td>
+            </tr>
+        </table>
+    </form>
+
+    <h3><a href="{{url_for('mod_cmx_server.verticalization', server_id=object.id)}}">Edit Verticalization</a></h3>
+
+</div>
+{% endblock %}

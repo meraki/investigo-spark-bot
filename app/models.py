@@ -16,8 +16,8 @@
 #http://flask-sqlalchemy.pocoo.org/2.1/models/
 #https://realpython.com/blog/python/flask-by-example-part-2-postgres-sqlalchemy-and-alembic/
 
-from sqlalchemy import Column, Integer, String, Boolean
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy import Column, Integer, String, Boolean, Float
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from sqlalchemy.sql.sqltypes import Numeric, DateTime, BigInteger
 
@@ -33,8 +33,8 @@ class CMXServer(Base):
     password = Column(String)
     externally_accessible = Column(Boolean)
     active = Column(Boolean)
-    cmx_system = relationship("CMXSystem", cascade="all, delete-orphan", single_parent=True)
-    cmx_system_id = Column(Integer, ForeignKey('cmx_system.id', ondelete='cascade'))
+    location_system = relationship("LocationSystem", cascade="all, delete-orphan", single_parent=True)
+    location_system_id = Column(Integer, ForeignKey('location_system.id', ondelete='cascade'))
 
     def __init__(self, name, url, username, password, active, externally_accessible):
         self.name = name
@@ -48,16 +48,55 @@ class CMXServer(Base):
         return "{} ({})".format(self.name, self.url)
 
     def get_hierarchies(self):
-        return self.cmx_system.campuses
+        return self.location_system.campuses
 
     def get_hierarchies_serialized(self):
         campuses = []
-        for c in self.cmx_system.campuses:
+        for c in self.location_system.campuses:
             campuses.append(c.serialize())
         return campuses
 
-class CMXSystem(Base):
-    __tablename__ = 'cmx_system'
+
+class MerakiServer(Base):
+    __tablename__ = 'meraki_server'
+    id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String, unique=True)
+    active = Column(Boolean, default=True)
+    organization_id = Column(String, nullable=True)
+    network_id = Column(String, nullable=True)
+    api_key = Column(String, nullable=True)
+    demo_server = Column(Boolean, nullable=False, default=False)
+    demo_server_url = Column(String, nullable=True)
+    location_system = relationship("LocationSystem", cascade="all, delete-orphan", single_parent=True)
+    location_system_id = Column(Integer, ForeignKey('location_system.id', ondelete='cascade'))
+
+    def __init__(self, name, active, organization_id=None, network_id=None, api_key=None, demo_server=False, demo_server_url=None):
+        self.name = name
+        self.active = active
+        self.organization_id = organization_id
+        self.network_id = network_id
+        self.api_key = api_key
+        self.demo_server = demo_server
+        self.demo_server_url = demo_server_url
+
+    def __repr__(self):
+        if self.demo_server:
+            return "{} (demo)".format(self.name)
+        else:
+            return "{} ({})".format(self.name, self.organization_id)
+
+    def get_hierarchies(self):
+        return self.location_system.campuses
+
+    def get_hierarchies_serialized(self):
+        campuses = []
+        for c in self.location_system.campuses:
+            campuses.append(c.serialize())
+        return campuses
+
+
+class LocationSystem(Base):
+    __tablename__ = 'location_system'
     id = Column(Integer, primary_key=True, unique=True)
     name = Column(String)
     campuses = relationship("Campus", cascade="all, delete-orphan", lazy='dynamic')
@@ -90,8 +129,8 @@ class Campus(Base):
     aes_uid = Column(BigInteger, primary_key=True, unique=True)
     name = Column(String, unique=True)
     vertical_name = Column(String, nullable=True)
-    cmx_system_id = Column(Integer, ForeignKey('cmx_system.id', ondelete='cascade'))
-    cmx_system = relationship("CMXSystem", back_populates="campuses")
+    location_system_id = Column(Integer, ForeignKey('location_system.id', ondelete='cascade'))
+    location_system = relationship("LocationSystem", back_populates="campuses")
     buildings = relationship("Building", cascade="all, delete-orphan", lazy='dynamic')
 
     def __init__(self, aes_uid, name, buildings=None, vertical_name=None):
@@ -119,7 +158,7 @@ class Campus(Base):
         item = {
             'aes_uid': self.aes_uid,
             'name': self.name,
-            'cmx_system_id': self.cmx_system_id,
+            'location_system_id': self.location_system_id,
             'vertical_name': self.vertical_name,
             'buildings': buildings
         }
@@ -200,12 +239,12 @@ class Floor(Base):
 
     map_path = Column(String)
 
-
     zones = relationship("Zone", back_populates="floor", cascade="all, delete-orphan", lazy='dynamic')
+    gps_markers = relationship("GPSMarker", back_populates="floor", cascade="all, delete-orphan", lazy='dynamic')
 
     def __init__(self, building_id, aes_uid, calibration_model_id, object_version, name, floor_length, floor_width,
                  floor_height, floor_offset_x, floor_offset_y, floor_unit, image_name, image_zoom_level, image_width,
-                 image_height, image_size, image_max_resolution, image_color_depth, zones=None, map_path=None, vertical_name=None):
+                 image_height, image_size, image_max_resolution, image_color_depth, zones=None, map_path=None, vertical_name=None, gps_markers=None):
         self.building_id = building_id
         self.aes_uid = aes_uid
         self.calibration_model_id = calibration_model_id
@@ -224,8 +263,13 @@ class Floor(Base):
         self.image_size = image_size
         self.image_max_resolution = image_max_resolution
         self.image_color_depth = image_color_depth
+
         if zones:
             self.zones = zones
+
+        if gps_markers:
+            self.gps_markers = gps_markers
+
         self.map_path = map_path
 
         if vertical_name:
@@ -321,6 +365,35 @@ class Zone(Base):
         return output
 
 
+class GPSMarker(Base):
+    __tablename__ = "gps_marker"
+    floor_id = Column(BigInteger, ForeignKey('floor.aes_uid', ondelete='cascade'))
+    floor = relationship("Floor", back_populates="gps_markers")
+    id = Column(Integer, primary_key=True, unique=True)
+    name = Column(String)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    unit = Column(String, default="DEGREES")
+
+    def __init__(self, floor_id, name, latitude, longitude, unit):
+        self.floor_id = floor_id
+        self.name = name
+        self.latitude = latitude
+        self.longitude = longitude
+        self.unit = unit
+
+    def serialize(self):
+        item = {
+            'id': self.id,
+            'floor_id': self.floor_id,
+            'name': self.name,
+            'unit': self.unit,
+            'latitude': str(self.latitude),
+            'longitude': str(self.longitude),
+        }
+        return item
+
+
 class DeviceLocation(Base):
     __tablename__ = "device_location"
     id = Column(Integer, primary_key=True, unique=True)
@@ -350,8 +423,6 @@ class DeviceLocation(Base):
             'last_modified': str(self.last_modified)
         }
         return item
-
-
 
 
 class DeviceLocationHistory(Base):

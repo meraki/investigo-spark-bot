@@ -1,0 +1,96 @@
+{% extends "_base/base.html" %}
+{% block title %}System Settings{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}{{deployment}} Location Server{% endblock %}
+{% block subsection_subtitle %}Server details{% endblock %}
+{% block content %}
+<div class="w3-container">
+    <table>
+        <tr>
+            <td>Name: </td>
+            <td>
+                {{object.name}}
+            </td>
+        </tr>
+        <tr>
+            <td>URL: </td>
+            <td>{{object.url}}</td>
+        </tr>
+        <tr>
+            <td>API Username: </td>
+            <td>{{object.username}}</td>
+        </tr>
+        <tr>
+            <td>API Password: </td>
+            <td>(hidden)</td>
+        </tr>
+        <tr>
+            <td>Externally accessible?</td>
+            <td>
+                {{object.externally_accessible}}
+            </td>
+        </tr>
+        <tr>
+            <td>Active</td>
+            <td>
+                {{object.active}}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <a href="{{url_for('mod_cmx_server.edit', server_id=object.id)}}">Edit</a>
+            </td>
+            <td>
+                <a href="{{url_for('mod_cmx_server.delete', server_id=object.id)}}">Delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<hr style="border-top: 1px dashed #8c8b8b;">
+<div class="w3-container">
+    {% for campus in object.get_hierarchies_serialized() %}
+        <div class="campus w3-container">
+            {% for building in campus.buildings %}
+                <div class="building w3-container">
+                    {% for floor in building.floors %}
+                        <form id="{{id}}" class="">
+                            <h3>{{floor.name}}
+                            {% if floor.vertical_name %}
+                                 <span> ({{floor.vertical_name}})</span>
+                            {% endif %}
+                            </h3>
+                            <table>
+
+                                <thead style="text-align:center; font-weight: bold;">
+                                    <td>Zone name</td>
+                                    <td>Vertical name</td>
+                                    <td>Max Occupancy</td>
+                                </thead>
+                            {% for zone in floor.zones %}
+                                {% set id = campus.name~'_'~building.name~'_'~floor.name~'_'~zone.name %}
+                                {% set id = id | replace ('!', '') %}
+                                {% set id = id | replace (' ', '}') %}
+                                <tr style="text-align:right;">
+                                    <td style="text-align:right;">{{zone.name}}</td>
+                                    {% set vertical_name = 'N/A' %}
+                                    {% set max_occupancy = 'N/A' %}
+                                    {% if zone.vertical_name %}
+                                        {% set vertical_name = zone.vertical_name %}
+                                    {% endif %}
+                                    {% if zone.max_occupation >= 0 %}
+                                        {% set max_occupancy = zone.max_occupation %}
+                                    {% endif %}
+                                    <td>{{vertical_name}}</td>
+                                    <td>{{max_occupancy}}</td>
+                                </tr>
+                            {% endfor %}
+                            </table>
+                        </form>
+                    {% endfor %}
+                </div>
+        {% endfor %}
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

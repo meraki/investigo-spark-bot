@@ -22,6 +22,7 @@ import datetime
 from app import app
 from app import get_api_spark, get_api_tropo, get_notification_sms_phone_number, get_sms_enabled, get_admin_name, get_show_web_link
 from app.database import db_session
+from app.mod_statistics.models import SparkCommandRequest
 from app.mod_user.models import RegisteredUser
 from app.mod_api.controller import get_device_location, get_devices_divided_by_hierarchy
 import plotly.plotly as py
@@ -33,6 +34,8 @@ from app.models import Floor, Zone
 py.sign_in('rafacarv', 'zMrWUiu61ulJhbKBLSSV')
 import re
 from sqlalchemy import func
+from app import get_controller_status
+from app.mod_statistics.models import SparkCommandRequest
 
 mod_spark = Blueprint('mod_spark', __name__, url_prefix='/spark')
 
@@ -53,6 +56,7 @@ def home():
         # Here you will analyze all the messages received on the room and react to them
         message_text = message.text
 
+
         if message.mentionedPeople:
             for person_id in message.mentionedPeople:
                 person = get_api_spark().people.get(person_id)
@@ -72,26 +76,52 @@ def home():
 
         first_word = message_text.lower().strip()
 
+        command_category = 'unrecognized'
+
         if first_word.startswith('find'):
             output = command_find(message_text, message.roomId, message.personId)
+            command_category = 'find'
 
         elif first_word.startswith('list'):
             output = command_list(message_text, message.roomId, message.personId)
+            command_category = 'list'
 
         elif first_word.startswith('add'):
             output = command_add(message_text, message.roomId, message.personId)
+            command_category = 'add'
 
         elif first_word.startswith('help'):
             output = command_help(message.roomId)
+            command_category = 'help'
 
         if not output:
             output = 'Command not identified'
             write_to_spark(room_id=room_id_received_on_message, text=output)
+            command_category = 'unrecognized'
+
+
+        log_command(command_category, message.id, message.roomId, message.personId, message.personEmail, message.created, message.roomType, message_text, get_controller_status())
+
+
     except Exception as e:
         traceback.print_exc()
         output = str(e)
 
     return output
+
+
+def log_command(command_category, message_id, room_id, person_id, person_email, created, room_type, message_text, deployment_status):
+    #instantiate new spark_command
+
+    try:
+        spark_command_request = SparkCommandRequest(message_id, command_category, room_id, person_id, person_email, created, room_type, message_text, deployment_status)
+        db_session.add(spark_command_request)
+        db_session.commit()
+
+    except Exception as e:
+        db_session.rollback()
+        traceback.print_exc()
+        print ("Error while trying to log the command")
 
 
 def command_list(message_text, room_id, person_id):

@@ -22,7 +22,7 @@ from flask import Blueprint, render_template, request, url_for, redirect, Respon
 from app import app
 from app.database import db_session
 from app import get_api_cmx
-from app.models import CMXServer, Campus, Building, Floor, Zone, CMXSystem
+from app.models import CMXServer, Campus, Building, Floor, Zone, LocationSystem
 
 mod_cmx_server = Blueprint('mod_cmx_server', __name__, url_prefix='/cmx_server')
 
@@ -32,7 +32,7 @@ mod_cmx_server = Blueprint('mod_cmx_server', __name__, url_prefix='/cmx_server')
 def show():
     try:
         servers = db_session.query(CMXServer).all()
-        return render_template("cmx_server/list.html", object=servers)
+        return render_template("server/cmx_server/list.html", object=servers, deployment="On-premises")
 
     except:
         traceback.print_exc()
@@ -42,7 +42,7 @@ def show():
 @mod_cmx_server.route('/details/<server_id>')
 def details(server_id):
     server = db_session.query(CMXServer).filter(CMXServer.id == server_id).first()
-    return render_template("cmx_server/details.html", object=server)
+    return render_template("server/cmx_server/details.html", object=server, deployment="On-premises")
 
 
 # Set the route and accepted methods
@@ -54,7 +54,7 @@ def add():
         'redirect_url': None,
     }
     if request.method == 'GET':
-        output = render_template("cmx_server/add.html")
+        output = render_template("server/cmx_server/add.html", deployment="On-premises")
 
     else:
         try:
@@ -99,7 +99,7 @@ def edit(server_id):
     try:
         server = db_session.query(CMXServer).filter(CMXServer.id == server_id).first()
         if request.method == 'GET':
-            output = render_template("cmx_server/edit.html", object=server)
+            output = render_template("server/cmx_server/edit.html", object=server, deployment="On-premises")
         else:
             server.name = request.form["cmx_server_name"]
             server.externally_accessible = request.form["cmx_server_externally_accessible"] == 'True'
@@ -112,6 +112,19 @@ def edit(server_id):
         db_session.rollback()
     return output
 
+
+@mod_cmx_server.route('/verticalization/<server_id>', methods=['GET'])
+def verticalization(server_id):
+    output = None
+    try:
+        server = db_session.query(CMXServer).filter(CMXServer.id == server_id).first()
+        output = render_template("server/verticalization.html", object=server, deployment="On-premises")
+
+    except Exception as e:
+        traceback.print_exc()
+        output = redirect(url_for('mod_error.home', message=str(e)))
+        db_session.rollback()
+    return output
 
 
 
@@ -157,8 +170,8 @@ def verticalization_add(server_id):
                         vertical_names = item['vertical_names']
                         break
 
-        cmx_system = db_session.query(CMXSystem).filter(CMXSystem.id == server_id).first()
-        campi = cmx_system.campuses
+        cmx_location_system = db_session.query(LocationSystem).filter(LocationSystem.id == server_id).first()
+        campi = cmx_location_system.campuses
         counter_campus = 0
         counter_floor = 0
         counter_building = 0
@@ -206,7 +219,7 @@ def delete(server_id):
     try:
         server = db_session.query(CMXServer).filter(CMXServer.id == server_id).first()
         if request.method == 'GET':
-            output = render_template("cmx_server/delete.html", object=server)
+            output = render_template("server/cmx_server/delete.html", object=server, deployment="On-premises")
         else:
             server = db_session.query(CMXServer).filter(CMXServer.id == request.form["cmx_server_id"]).delete()
             output = redirect(url_for('mod_cmx_server.show'))
@@ -276,10 +289,10 @@ def validate_cmx_server(cmx_server):
             db_session.query(Campus).delete()
             campuses = []
             counter_campus = 0
-            cmx_system_name = cmx_server.name
-            cmx_system = CMXSystem(cmx_system_name)
-            cmx_system.campuses = campuses
-            cmx_server.cmx_system = cmx_system
+            cmx_location_system_name = cmx_server.name
+            cmx_location_system = LocationSystem(cmx_location_system_name)
+            cmx_location_system.campuses = campuses
+            cmx_server.location_system = cmx_location_system
             for campus in server_info["campuses"]:
                 counter_buildings = 0
                 counter_floors = 0
@@ -289,8 +302,8 @@ def validate_cmx_server(cmx_server):
                 campus_uid = campus["aesUid"]
                 db_campus = Campus(campus_uid, name, buildings=None)
                 campuses.append(db_campus)
-                db_campus.cmx_system = cmx_system
-                db_campus.cmx_system_id = cmx_system.id
+                db_campus.location_system = cmx_location_system
+                db_campus.location_system_id = cmx_location_system.id
                 db_session.add(db_campus)
 
                 server_buildings = campus["buildingList"]
@@ -379,8 +392,8 @@ def verticalization_remove(server_id):
     }
     try:
         form_json = request.json
-        cmx_system = db_session.query(CMXSystem).filter(CMXSystem.id == server_id).first()
-        campi = cmx_system.campuses
+        location_system = db_session.query(LocationSystem).filter(LocationSystem.id == server_id).first()
+        campi = location_system.campuses
         for campus in campi:
             campus.vertical_name = None
             for building in campus.buildings:

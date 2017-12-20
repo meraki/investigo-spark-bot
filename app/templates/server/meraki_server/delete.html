@@ -1,0 +1,25 @@
+{% extends "_base/base.html" %}
+{% block title %}System Settings{% endblock %}
+{% block style %}{% endblock %}
+{% block scripts %}{% endblock %}
+{% block subsection_title %}{{deployment}} Server{% endblock %}
+{% block subsection_subtitle %}Delete instance{% endblock %}
+{% block content %}
+<p style="color:red;">Are you sure you want to remove?</p>
+<table>
+    <tr>
+        <td>Name: </td>
+        <td>
+            {{object.name}}
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <form method="POST">
+                <input type="submit" value="Delete"/>
+                <input type="hidden" name="meraki_server_id" value="{{object.id}}"/>
+            </form>
+        </td>
+    </tr>
+</table>
+{% endblock %}
