@@ -33,6 +33,14 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))   # refers to application_
 app.config.from_object(os.environ['APP_SETTINGS'])
 
 
+def get_location_api_extractor():
+    output = get_api_cmx(get_cmx_controller())
+    if not output:
+        output = get_api_meraki(get_meraki_controller())
+
+    return output
+
+
 def get_api_cmx(cmx_server=None):
     if not cmx_server:
         cmx_server = get_cmx_controller()
@@ -177,9 +185,9 @@ def before_first_request():
 def before_request():
     bp = request.blueprint
     # Exempting requests on the root '/something'. i.e. bp = None
-    if bp and bp not in [cmx_notification_mod.name, user_mod.name, api_mod.name, error_mod.name, cmx_server_mod.name, meraki_server_mod.name, server_mod.name]:
-        if get_cmx_controller() is None:
-            return redirect(url_for('mod_error.home', message='You need to set a server'))
+    if bp and bp not in [user_mod.name, api_mod.name, error_mod.name, server_mod.name] and bp not in [cmx_notification_mod.name, cmx_server_mod.name] and bp not in [meraki_server_mod.name]:
+        if get_cmx_controller() is None and get_meraki_controller() is None:
+            return redirect(url_for('mod_error.home', message='You need to set up a server'))
 
 
 def invoke_db_migration():

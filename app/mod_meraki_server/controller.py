@@ -71,6 +71,7 @@ def delete(server_id):
 
     return output
 
+
 # Set the route and accepted methods
 @mod_meraki_server.route('/add', methods=['GET', 'POST'])
 def add():

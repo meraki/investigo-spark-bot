@@ -16,7 +16,7 @@
 import traceback, json, datetime
 from flask import Blueprint, Response, url_for
 from app.database import db_session, db_engine
-from app import get_api_cmx, get_cmx_controller, get_meraki_controller
+from app import get_location_api_extractor, get_cmx_controller, get_meraki_controller
 from app.mod_cmx_notification.models import CMXNotification
 from app.mod_user.models import RegisteredUser
 from app.models import DeviceLocation, Floor
@@ -99,7 +99,7 @@ def get_device_location(mac_address, use_asynchronous_data=False):
     unknown_devices = items['unknown_devices']
     if len(registered_users) == len(unknown_devices) == 0:
         try:
-            info = get_api_cmx().get_client_information(mac_address)
+            info = get_location_api_extractor().get_client_information(mac_address)
             if info:
                 item = {}
                 location_info = None
@@ -196,7 +196,7 @@ def get_devices_divided_by_hierarchy(use_asynchronous_data=True, hierarchy=None)
     if use_asynchronous_data and len(registered_users) == 0 and len(unknown_devices) == 0:
         if len(registered_users) == len(unknown_devices) == 0:
             try:
-                clients_information = get_api_cmx().get_clients_list()
+                clients_information = get_location_api_extractor().get_clients_list()
                 if clients_information:
                     for info in clients_information:
                         item = {}

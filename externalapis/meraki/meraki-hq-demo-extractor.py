@@ -12,10 +12,10 @@ class MerakiHQDemoExtractor(IMerakiAPICaller, APICaller):
         }
         super(MerakiHQDemoExtractor, self).__init__("MERAKI")
 
-    def __build_client_url(self, mac_address):
+    def __build_client_URL(self, mac_address):
         return "{}/".format(self.API_BASE_URL, mac_address)
 
-    def get_clients(self):
+    def get_clients_list(self):
         return super(MerakiHQDemoExtractor, self).requestHTTP(self.API_BASE_URL, "GET", self.headers)
 
     def get_client_information(self, mac_address):

@@ -9,6 +9,11 @@ class IMerakiAPICaller (object):
     def get_client_information(self, mac_address):
         pass
 
+    @abc.abstractmethod
+    def get_clients_list(self, mac_address):
+        pass
+
+
 class MerakiHQDemoExtractor(IMerakiAPICaller, APICaller):
     API_BASE_URL = "http://live-map.meraki_old.com/clients"
     headers = ""
@@ -19,11 +24,11 @@ class MerakiHQDemoExtractor(IMerakiAPICaller, APICaller):
         }
         super(MerakiHQDemoExtractor, self).__init__("MERAKI")
 
-
     def __build_client_URL(self, mac_address):
         return ("{}/{}".format(self.API_BASE_URL, mac_address))
 
-
-
     def get_client_information(self, mac_address):
+        return super(MerakiHQDemoExtractor, self).requestHTTP(self.__build_client_URL(mac_address), "GET", self.headers)
+
+    def get_clients_list(self, mac_address):
         return super(MerakiHQDemoExtractor, self).requestHTTP(self.__build_client_URL(mac_address), "GET", self.headers)
