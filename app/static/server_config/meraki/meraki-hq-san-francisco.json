@@ -23,7 +23,7 @@
                },
                "floorList":[
                   {
-                     "aesUid":723413320329068589,
+                     "aesUid":1,
                      "name":"1st Floor",
                      "hierarchyName":"Meraki HQ>San Francisco>1st Floor",
                      "floorNumber":1,
@@ -35,7 +35,7 @@
                         "height":544.0,
                         "zoomLevel":4,
                         "width":2038.0,
-                        "imageName":"domain_0_1421088463647.png",
+                        "imageName":"meraki-hq-sf-1-floor.png",
                         "maxResolution":8.0,
                         "colorDepth":8,
                         "size":2038.0
@@ -43,9 +43,253 @@
                      "dimension":{
                         "offsetX":0.0,
                         "offsetY":0.0,
-                        "height":16.5,
+                        "height":0.0,
                         "width":307.0,
-                        "length":81.9,
+                        "length":30,
+                        "unit":"FEET"
+                     },
+                     "gpsMarkers":[
+                        {
+                           "name":"NW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"NE",
+                           "geoCoordinate":{
+                              "latitude":37.77079107,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SE",
+                           "geoCoordinate":{
+                              "latitude":37.77005747,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        }
+                     ]
+                  },
+                  {
+                     "aesUid":2,
+                     "name":"2nd Floor",
+                     "hierarchyName":"Meraki HQ>San Francisco>2nd Floor",
+                     "floorNumber":2,
+                     "zones":[
+
+                     ],
+                     "aesUidString":"723413320329068590",
+                     "image":{
+                        "height":2585.0,
+                        "zoomLevel":4,
+                        "width":2862.0,
+                        "imageName":"meraki-hq-sf-2-floor.png",
+                        "maxResolution":8.0,
+                        "colorDepth":8,
+                        "size":2038.0
+                     },
+                     "dimension":{
+                        "offsetX":0.0,
+                        "offsetY":0.0,
+                        "height":0.0,
+                        "width":295,
+                        "length":255,
+                        "unit":"FEET"
+                     },
+                     "gpsMarkers":[
+                        {
+                           "name":"NW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"NE",
+                           "geoCoordinate":{
+                              "latitude":37.77079107,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SE",
+                           "geoCoordinate":{
+                              "latitude":37.77005747,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        }
+                     ]
+                  },
+                  {
+                     "aesUid":3,
+                     "name":"3rd Floor",
+                     "hierarchyName":"Meraki HQ>San Francisco>3rd Floor",
+                     "floorNumber":3,
+                     "zones":[
+
+                     ],
+                     "aesUidString":"723413320329068590",
+                     "image":{
+                        "height":1048.0,
+                        "zoomLevel":4,
+                        "width":1006.0,
+                        "imageName":"meraki-hq-sf-3-floor.png",
+                        "maxResolution":8.0,
+                        "colorDepth":8,
+                        "size":2038.0
+                     },
+                     "dimension":{
+                        "offsetX":0.0,
+                        "offsetY":0.0,
+                        "height":0.0,
+                        "width":295,
+                        "length":255,
+                        "unit":"FEET"
+                     },
+                     "gpsMarkers":[
+                        {
+                           "name":"NW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"NE",
+                           "geoCoordinate":{
+                              "latitude":37.77079107,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SE",
+                           "geoCoordinate":{
+                              "latitude":37.77005747,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        }
+                     ]
+                  },
+                  {
+                     "aesUid":4,
+                     "name":"4th Floor",
+                     "hierarchyName":"Meraki HQ>San Francisco>4th Floor",
+                     "floorNumber":4,
+                     "zones":[
+
+                     ],
+                     "aesUidString":"723413320329068590",
+                     "image":{
+                        "height":647.0,
+                        "zoomLevel":4,
+                        "width":681.0,
+                        "imageName":"meraki-hq-sf-4-floor.png",
+                        "maxResolution":8.0,
+                        "colorDepth":8,
+                        "size":2038.0
+                     },
+                     "dimension":{
+                        "offsetX":0.0,
+                        "offsetY":0.0,
+                        "height":0.0,
+                        "width":295,
+                        "length":255,
+                        "unit":"FEET"
+                     },
+                     "gpsMarkers":[
+                        {
+                           "name":"NW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"NE",
+                           "geoCoordinate":{
+                              "latitude":37.77079107,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SW",
+                           "geoCoordinate":{
+                              "latitude":37.77072746,
+                              "longitude":-122.38760948,
+                              "unit":"DEGREES"
+                           }
+                        },
+                        {
+                           "name":"SE",
+                           "geoCoordinate":{
+                              "latitude":37.77005747,
+                              "longitude":-122.38657951,
+                              "unit":"DEGREES"
+                           }
+                        }
+                     ]
+                  },
+                  {
+                     "aesUid":5,
+                     "name":"5th Floor",
+                     "hierarchyName":"Meraki HQ>San Francisco>5st Floor",
+                     "floorNumber":4,
+                     "zones":[
+
+                     ],
+                     "aesUidString":"723413320329068590",
+                     "image":{
+                        "height":846.0,
+                        "zoomLevel":4,
+                        "width":956.0,
+                        "imageName":"meraki-hq-sf-5-floor.png",
+                        "maxResolution":8.0,
+                        "colorDepth":8,
+                        "size":2038.0
+                     },
+                     "dimension":{
+                        "offsetX":0.0,
+                        "offsetY":0.0,
+                        "height":0.0,
+                        "width":295,
+                        "length":255,
                         "unit":"FEET"
                      },
                      "gpsMarkers":[

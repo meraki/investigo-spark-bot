@@ -288,6 +288,12 @@ class Floor(Base):
         zones = []
         for z in self.zones:
             zones.append(z.serialize())
+
+        gps_markers = []
+        if self.gps_markers:
+            for marker in self.gps_markers:
+                gps_markers.append(marker.serialize())
+
         item = {
             'aes_uid': self.aes_uid,
             'building_id': self.building_id,
@@ -309,8 +315,12 @@ class Floor(Base):
             'image_color_depth': float(self.image_color_depth),
             'map_path': self.map_path,
             'vertical_name': self.vertical_name,
-            'zones': zones
+            'zones': zones,
+            'gps_markers': gps_markers
         }
+
+
+
         return item
 
 

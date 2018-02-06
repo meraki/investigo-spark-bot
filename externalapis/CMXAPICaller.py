@@ -53,6 +53,10 @@ class CMXAPICaller(APICaller):
           
     headers = ""
 
+    #Adding modularity to accomodate Meraki deployment.
+    deployment_type = "On-premises"
+    demo = False
+
     def __init__(self, name, base_url, username, password, version="v1"):
         self.API_SERVER_NAME = name
         self.API_BASE_URL = base_url + "/api"
@@ -84,6 +88,11 @@ class CMXAPICaller(APICaller):
     
     def get_client_information(self, macAddress, timeout=1):
         url = "{}/location/{}/clients/{}".format(self.API_BASE_URL, self.API_VERSION, macAddress)
+        """
+        json_output = super(CMXAPICaller, self).requestHTTPJSON(url, "GET", self.headers, timeout=timeout)
+        print (json.dumps(json_output, indent=2))
+        return json_output
+        """
         return super(CMXAPICaller, self).requestHTTPJSON(url, "GET", self.headers, timeout=timeout)
     
     def get_all_maps(self):

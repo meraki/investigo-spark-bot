@@ -282,7 +282,7 @@ def command_find(message_text, room_id, person_id):
                 location = location[0]['location']
                 map_path = location['map_information']['map_path']
                 background_image_path = url_for('static', filename=map_path.replace('/static/', ''), _external=True)
-                background_image_path = 'http://cmx-investigo.herokuapp.com' + map_path
+                #background_image_path = 'http://cmx-investigo.herokuapp.com' + map_path
                 destination_x = int(math.floor(float(location['coord_x'])))
                 destination_y = int(math.floor(float(location['coord_y'])))
                 image_width = float(location['map_information']['image_width'])

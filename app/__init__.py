@@ -34,10 +34,15 @@ app.config.from_object(os.environ['APP_SETTINGS'])
 
 
 def get_location_api_extractor():
-    output = get_api_cmx(get_cmx_controller())
-    if not output:
-        output = get_api_meraki(get_meraki_controller())
-
+    output = None
+    cmx_controller = get_cmx_controller()
+    if cmx_controller:
+        output = get_api_cmx(cmx_controller)
+    else:
+        meraki_controller = get_meraki_controller()
+        if meraki_controller:
+            output = get_api_meraki(meraki_controller)
+    
     return output
 
 

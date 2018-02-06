@@ -99,25 +99,41 @@ def get_device_location(mac_address, use_asynchronous_data=False):
     unknown_devices = items['unknown_devices']
     if len(registered_users) == len(unknown_devices) == 0:
         try:
-            info = get_location_api_extractor().get_client_information(mac_address)
-            if info:
-                item = {}
-                location_info = None
+            location_api_extractor = get_location_api_extractor()
+            if location_api_extractor:
+                info = location_api_extractor.get_client_information(mac_address)
 
-                if 'mapHierarchyString' in info['mapInfo']:
-                    hierarchy = info['mapInfo']['mapHierarchyString']
-                    coord_x = info['mapCoordinate']['x']
-                    coord_y = info['mapCoordinate']['y']
-                    last_modified = info['statistics']['lastLocatedTime']
-                    location_info = __serialize_location_information(coord_x, coord_y, hierarchy, last_modified, 'static')
+                if info:
+                    item = {}
+                    location_info = None
+
+                    if location_api_extractor.deployment_type == 'On-premises':
+                        if 'mapHierarchyString' in info['mapInfo']:
+                            hierarchy = info['mapInfo']['mapHierarchyString']
+                            coord_x = info['mapCoordinate']['x']
+                            coord_y = info['mapCoordinate']['y']
+                            last_modified = info['statistics']['lastLocatedTime']
+                            location_info = __serialize_location_information(coord_x, coord_y, hierarchy, last_modified, 'static')
+
+                    elif location_api_extractor.deployment_type == 'Cloud' and location_api_extractor.demo:
+                        floor_name = info['floors']
+                        floor = db_session.query(Floor).filter(Floor.name == floor_name).first()
+                        if floor:
+                            floor_hierarchy = floor.get_hierarchy()
+
+                            x, y = __calculate_x_y_coordinates_based_on_gps_coordinates(floor, info['lat'], info['lng'])
+
+                            location_info = __serialize_location_information(x, y, floor_hierarchy, info['seenString'], 'demo')
+
                     user = db_session.query(RegisteredUser).filter(RegisteredUser.mac_address == mac_address).first()
                     if user:
                         item['user_info'] = __serialize_user_information(user.name, user.phone, user.id)
                         registered_users.append(item)
                     else:
                         unknown_devices.append(item)
-
-                item['location'] = location_info
+                    item['location'] = location_info
+            else:
+                raise Exception("No server has been setup")
 
         except:
             traceback.print_exc()
@@ -196,29 +212,34 @@ def get_devices_divided_by_hierarchy(use_asynchronous_data=True, hierarchy=None)
     if use_asynchronous_data and len(registered_users) == 0 and len(unknown_devices) == 0:
         if len(registered_users) == len(unknown_devices) == 0:
             try:
-                clients_information = get_location_api_extractor().get_clients_list()
-                if clients_information:
-                    for info in clients_information:
-                        item = {}
-                        location_info = None
-                        currently_tracked = info['currentlyTracked']
-                        mac_address = info['macAddress']
-                        if currently_tracked and 'mapHierarchyString' in info['mapInfo']:
-                            h = info['mapInfo']['mapHierarchyString']
-                            coord_x = info['mapCoordinate']['x']
-                            coord_y = info['mapCoordinate']['y']
-                            last_modified = info['statistics']['lastLocatedTime']
-                            location_info = __serialize_location_information(coord_x, coord_y, h, last_modified,
-                                                                             'static')
-                            user = db_session.query(RegisteredUser).filter(
-                                RegisteredUser.mac_address == mac_address).first()
-                            if user:
-                                item['user_info'] = __serialize_user_information(user.name, user.phone, user.id)
-                                registered_users.append(item)
-                            else:
-                                unknown_devices.append(item)
-                        item['location'] = location_info
-                        item['mac_address'] = mac_address
+                location_api_extractor = get_location_api_extractor()
+                if location_api_extractor:
+                    clients_information = location_api_extractor.get_clients_list()
+                    if clients_information:
+                        for info in clients_information:
+                            item = {}
+                            location_info = None
+                            currently_tracked = info['currentlyTracked']
+                            mac_address = info['macAddress']
+                            if currently_tracked and 'mapHierarchyString' in info['mapInfo']:
+                                h = info['mapInfo']['mapHierarchyString']
+                                coord_x = info['mapCoordinate']['x']
+                                coord_y = info['mapCoordinate']['y']
+                                last_modified = info['statistics']['lastLocatedTime']
+                                location_info = __serialize_location_information(coord_x, coord_y, h, last_modified,
+                                                                                 'static')
+                                user = db_session.query(RegisteredUser).filter(
+                                    RegisteredUser.mac_address == mac_address).first()
+                                if user:
+                                    item['user_info'] = __serialize_user_information(user.name, user.phone, user.id)
+                                    registered_users.append(item)
+                                else:
+                                    unknown_devices.append(item)
+                            item['location'] = location_info
+                            item['mac_address'] = mac_address
+                else:
+                    raise Exception("No server has been setup")
+
             except:
                 traceback.print_exc()
 
@@ -379,3 +400,20 @@ def __calculate_time_ago(last_modified):
     now = datetime.datetime.now(tz=last_modified.tzinfo)
     last_modified_ago = display_time((now - last_modified).total_seconds())
     return last_modified_ago
+
+
+import math
+
+def __get_x(width, lng):
+    return int(round(math.fmod((width * (180.0 + lng) / 360.0), (1.5 * width))))
+
+def __get_y(width, height, lat):
+    lat_rad = lat * math.pi / 180.0
+    merc = 0.5 * math.log( (1 + math.sin(lat_rad)) / (1 - math.sin(lat_rad)) )
+    return int(round((height / 2) - (width * merc / (2 * math.pi))))
+
+
+def __calculate_x_y_coordinates_based_on_gps_coordinates(floor, lat, lng):
+    width = float(floor.floor_width)
+    height = float(floor.floor_length)
+    return __get_x(width, lng), __get_y(width, height, lat)

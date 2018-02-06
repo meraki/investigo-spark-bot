@@ -196,11 +196,17 @@ def setup_demo_server(meraki_server):
                                     image_max_resolution = f["image"]["maxResolution"]
                                     image_color_depth = f["image"]["colorDepth"]
 
+                                    treated_floor_name = ''.join(e for e in name if e.isalnum())
+
+                                    #filename = os.path.join(app.static_folder, 'maps/meraki-hq/{}.png'.format(treated_floor_name))
+                                    map_path = url_for('static', filename='maps/meraki-hq/{}.png'.format(treated_floor_name))
+
+
                                     db_floor = Floor(db_building.aes_uid, aes_uid, calibration_model_id, object_version,
                                                      name, floor_length, floor_width,
                                                      floor_height, floor_offset_x, floor_offset_y, floor_unit,
                                                      image_name, image_zoom_level, image_width,
-                                                     image_height, image_size, image_max_resolution, image_color_depth)
+                                                     image_height, image_size, image_max_resolution, image_color_depth, map_path=map_path)
                                     db_session.add(db_floor)
                                     server_zones = f["zones"]
                                     # skipping the zones for now
