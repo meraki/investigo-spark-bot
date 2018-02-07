@@ -19,7 +19,7 @@ import traceback
 import json
 import os
 import datetime
-from app import app
+from app import app, get_location_api_extractor
 from app import get_api_spark, get_api_tropo, get_notification_sms_phone_number, get_sms_enabled, get_admin_name, get_show_web_link
 from app.database import db_session
 from app.mod_statistics.models import SparkCommandRequest
@@ -367,9 +367,15 @@ def command_find(message_text, room_id, person_id):
                         post_markdown += '\n \n_Click [here]({}) for live tracking._'.format(
                             url_for('mod_monitor.device_show', mac=mac, _external=True))
 
-                local_file = \
-                plot_origin_and_destination_over_image(background_image_path, origin_x, origin_y, destination_x,
-                                                       destination_y, image_width, image_height, floor_width, floor_length, distance)[0]
+
+                text_color = '#ffffff'
+
+                location_api_extractor = get_location_api_extractor()
+                if location_api_extractor and location_api_extractor.deployment_type == 'Cloud':
+                    text_color = '#000000'
+
+                local_file = plot_origin_and_destination_over_image(background_image_path, origin_x, origin_y, destination_x,
+                                                       destination_y, image_width, image_height, floor_width, floor_length, distance, text_color=text_color)[0]
 
                 post_files = [local_file]
                 success = True
@@ -469,87 +475,7 @@ def __replace_string_case_insensitive(string, find, replace):
     insensitive_hippo = re.compile(re.escape(find), re.IGNORECASE)
     return insensitive_hippo.sub(replace, string)
 
-
-def plot_point_over_image(background_image_path, coord_x, coord_y, image_width, image_height, floor_width, floor_length):
-    #plot_x = coord_x * image_width / floor_width
-    #plot_y = coord_y * image_height / floor_length
-    plot_x = math.floor((image_width / floor_width) * coord_x)
-    plot_y = math.floor((image_height / floor_length) * coord_y)
-
-    plot_x = coord_x
-    plot_y = coord_y
-    #print('({},{})'.format(plot_x, plot_y))
-
-
-    marker_size = 0.02 * max(image_width, image_height)
-    trace1 = go.Scatter(
-        x=[coord_x],
-        y=[coord_y],
-        #mode='markers+text',
-
-        #text=['Current position'],
-        #textposition='top',
-        mode='markers',
-        marker=dict(
-            size=marker_size,
-            symbol='x-open',
-            color='rgb(255,255,0)',
-            line=dict(
-                width=marker_size/10,
-                color='rgb(0, 0, 0)'
-            )
-        )
-    )
-    layout = go.Layout(
-        width=image_width,
-        height=image_height,
-        #https://plot.ly/python/axes/
-        xaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showline=False,
-            autotick=True,
-            ticks='',
-            showticklabels=False,
-            range=[0, floor_width],
-
-        ),
-        yaxis=dict(
-            showgrid=False,
-            zeroline=False,
-            showline=False,
-            autotick=True,
-            ticks='',
-            showticklabels=False,
-            range=[floor_length, 0],
-        ),
-        plot_bgcolor='transparent',
-        paper_bgcolor='transparent',
-        # https://plot.ly/python/reference/#layout-images
-        images=[dict(
-        # source="https://images.plot.ly/language-icons/api-home/python-logo.png",
-        #source="http://cmx-investigo.herokuapp.com/static/maps/DevNetZone.png",
-        source=background_image_path,
-        xref="paper",
-        yref="paper",
-        xanchor='left',
-        yanchor='bottom',
-        x=0,
-        y=0,
-        sizex=1,
-        sizey=1,
-        sizing="stretch",
-        opacity=1,
-        layer="below")])
-    fig = go.Figure(data=[trace1], layout=layout)
-    file_path = 'maps_temp/cmx_finder-{}.png'.format(datetime.datetime.now().strftime("%Y-%m-%dT%H%M%S"))
-    saved_file_name = os.path.join(app.static_folder, file_path)
-    #print(saved_file_name)
-    py.image.save_as(fig, saved_file_name)
-    return saved_file_name
-
-
-def plot_origin_and_destination_over_image(background_image_path, origin_x, origin_y, destination_x, destination_y, image_width, image_height, floor_width, floor_length, distance, text_origin='You are here', text_destination='Asset location'):
+def plot_origin_and_destination_over_image(background_image_path, origin_x, origin_y, destination_x, destination_y, image_width, image_height, floor_width, floor_length, distance, text_origin='You are here', text_destination='Asset location', text_color='#ffffff'):
 
     annotation_x = ((origin_x + destination_x)/2)
     annotation_y = ((origin_y + destination_y)/2)
@@ -564,7 +490,7 @@ def plot_origin_and_destination_over_image(background_image_path, origin_x, orig
         textfont=dict(
                     family='Courier New, monospace',
                     size=16,
-                    color='#ffffff'
+                    color=text_color
                 ),
         mode='lines+markers+text',
         marker=dict(
