@@ -14,13 +14,14 @@
    limitations under the License.
 """
 import traceback, json, datetime
-from flask import Blueprint, Response, url_for
+from flask import Blueprint, Response
 from app.database import db_session, db_engine
 from app import get_location_api_extractor, get_cmx_controller, get_meraki_controller
 from app.mod_cmx_notification.models import CMXNotification
 from app.mod_user.models import RegisteredUser
 from app.models import DeviceLocation, Floor
 from dateutil import parser
+import math
 
 mod_api = Blueprint('mod_api', __name__, url_prefix='/api')
 expiration_time = 5  # 5 seconds
@@ -120,8 +121,8 @@ def get_device_location(mac_address, use_asynchronous_data=False):
                         floor = db_session.query(Floor).filter(Floor.name == floor_name).first()
                         if floor:
                             floor_hierarchy = floor.get_hierarchy()
-
-                            x, y = __calculate_x_y_coordinates_based_on_gps_coordinates(floor, info['lat'], info['lng'])
+                            print (info)
+                            x, y = __calculate_x_y_coordinates(floor, info['lat'], info['lng'])
 
                             location_info = __serialize_location_information(x, y, floor_hierarchy, info['seenString'], 'demo')
 
@@ -402,18 +403,18 @@ def __calculate_time_ago(last_modified):
     return last_modified_ago
 
 
-import math
-
-def __get_x(width, lng):
-    return int(round(math.fmod((width * (180.0 + lng) / 360.0), (1.5 * width))))
-
-def __get_y(width, height, lat):
-    lat_rad = lat * math.pi / 180.0
-    merc = 0.5 * math.log( (1 + math.sin(lat_rad)) / (1 - math.sin(lat_rad)) )
-    return int(round((height / 2) - (width * merc / (2 * math.pi))))
-
-
-def __calculate_x_y_coordinates_based_on_gps_coordinates(floor, lat, lng):
+def __calculate_x_y_coordinates(floor, lat, lng):
     width = float(floor.floor_width)
-    height = float(floor.floor_length)
-    return __get_x(width, lng), __get_y(width, height, lat)
+    length = float(floor.floor_length)
+
+    nw = filter(lambda x: x.name == "NW", floor.gps_markers)[0]
+    ne = filter(lambda x: x.name == "NE", floor.gps_markers)[0]
+    sw = filter(lambda x: x.name == "SW", floor.gps_markers)[0]
+    return __calculate_x_y_coordinates_based_on_gps_coordinates(nw.longitude, ne.longitude, nw.latitude, sw.latitude, width, length, lat, lng)
+
+
+def __calculate_x_y_coordinates_based_on_gps_coordinates(nw_lon, ne_lon, nw_lat, sw_lat, width, length, lat, lon):
+    x = width * abs(abs(lon) - abs(nw_lon)) / abs(abs(ne_lon) - abs(nw_lon))
+    y = length * abs(abs(lat) - abs(nw_lat)) / abs(abs(sw_lat) - abs(nw_lat))
+    # print ('({}, {}) <=== ({}, {})'.format(x, y, lat, lon))
+    return x, y
