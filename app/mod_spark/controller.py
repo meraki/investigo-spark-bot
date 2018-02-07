@@ -277,7 +277,7 @@ def command_find(message_text, room_id, person_id):
             location = get_device_location(mac, True)
             # print(json.dumps(location, indent=2))
             location = location['unknown_devices'] + location['registered_users']
-            print location[0]
+            # print location[0]
             if len(location) > 0 and location[0]['location']:
 
                 location = location[0]['location']
@@ -285,6 +285,7 @@ def command_find(message_text, room_id, person_id):
                 background_image_path = url_for('static', filename=map_path.replace('/static/', ''), _external=True)
                 #print (background_image_path)
                 #background_image_path = 'http://cmx-investigo.herokuapp.com' + map_path
+                #print background_image_path
                 destination_x = int(math.floor(float(location['coord_x'])))
                 destination_y = int(math.floor(float(location['coord_y'])))
                 image_width = float(location['map_information']['image_width'])
