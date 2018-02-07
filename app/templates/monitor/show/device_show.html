@@ -140,6 +140,8 @@ function updateScreen(msg) {
             $('#coordX').text(Math.floor(location.coord_x));
             $('#coordY').text(Math.floor(location.coord_y));
             $('#origin').text(location.origin);
+        } else {
+            tracked = false;
         }
 
         $('#mac').text(namespace);

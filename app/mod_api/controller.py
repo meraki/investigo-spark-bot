@@ -121,7 +121,6 @@ def get_device_location(mac_address, use_asynchronous_data=False):
                         floor = db_session.query(Floor).filter(Floor.name == floor_name).first()
                         if floor:
                             floor_hierarchy = floor.get_hierarchy()
-                            #print (info)
                             x, y = __calculate_x_y_coordinates(floor, info['lat'], info['lng'])
 
                             location_info = __serialize_location_information(x, y, floor_hierarchy, info['seenString'], 'demo')

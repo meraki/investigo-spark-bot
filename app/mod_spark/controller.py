@@ -386,9 +386,10 @@ def command_find(message_text, room_id, person_id):
         if post_text is not None or post_markdown is not None:
             if success and user_name and get_sms_enabled():
                 person = get_api_spark().people.get(person_id)
-                if person.displayName == get_admin_name():
-                    tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
-                    get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
+                if get_admin_name() and person.displayName:
+                    if person.displayName.lower() == get_admin_name().lower():
+                        tropo_text = 'Please bring {} to Dr. {}. It is located at {}'.format(user_name, person.displayName, combined_hierarchies)#, url_for('mod_monitor.device_show', mac=mac, _external=True))
+                        get_api_tropo().triggerTropoWithMessageAndNumber(tropo_text, get_notification_sms_phone_number(), type='text')
             print ('Posting on Spark... {}'.format(post_text))
             write_to_spark(post_room_id, post_to_person_id, post_to_person_email, post_text, post_markdown, post_files)
             if post_files:
