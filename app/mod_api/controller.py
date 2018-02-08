@@ -21,6 +21,8 @@ from app.mod_cmx_notification.models import CMXNotification
 from app.mod_user.models import RegisteredUser
 from app.models import DeviceLocation, Floor
 from dateutil import parser
+from sqlalchemy import func
+
 import math
 
 mod_api = Blueprint('mod_api', __name__, url_prefix='/api')
@@ -64,6 +66,25 @@ def client(mac_address):
     output = {'error': None}
     try:
         output['items'] = get_device_location(mac_address, True)
+
+    except Exception as e:
+        traceback.print_exc()
+        output = format_error_dictionary(str(e))
+
+    return Response(json.dumps(output), mimetype='application/json')
+
+
+@mod_api.route('/user/<name>')
+def user(name):
+    output = {'error': None, 'items': {}}
+    try:
+        db_user = db_session.query(RegisteredUser).filter(func.lower(RegisteredUser.name) == func.lower(name)).first()
+
+        if db_user:
+            output['items'] = get_device_location(db_user.mac_address, True)
+        else:
+            output['items']['registered_users'] = []
+            output['items']['unknown_devices'] = []
 
     except Exception as e:
         traceback.print_exc()
