@@ -94,6 +94,10 @@ def home():
             output = command_help(message.roomId)
             command_category = 'help'
 
+        elif first_word.startswith('open'):
+            output = command_open(message.roomId)
+            command_category = 'open'
+
         if not output:
             output = 'Command not identified'
             write_to_spark(room_id=room_id_received_on_message, text=output)
@@ -236,6 +240,19 @@ Examples:
     finally:
         print ('Posting on Spark... {}'.format(post_text))
         write_to_spark(room_id, None, None, post_text, post_markdown, None)
+
+    return post_text
+
+
+def command_open(room_id):
+    try:
+        post_text = request.url_root
+    except:
+        post_text = 'An unexpected error occurred. Please try again in a few moments.'
+        traceback.print_exc()
+    finally:
+        print ('Posting on Spark... {}'.format(post_text))
+        write_to_spark(room_id, None, None, post_text, post_text, None)
 
     return post_text
 
