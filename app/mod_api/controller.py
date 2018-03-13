@@ -236,17 +236,35 @@ def get_devices_divided_by_hierarchy(use_asynchronous_data=True, hierarchy=None)
                 location_api_extractor = get_location_api_extractor()
                 if location_api_extractor:
                     clients_information = location_api_extractor.get_clients_list()
+                    if location_api_extractor.deployment_type == 'Cloud' and location_api_extractor.demo:
+                        floors  = db_session.query(Floor).all()
                     if clients_information:
                         for info in clients_information:
                             item = {}
                             location_info = None
-                            currently_tracked = info['currentlyTracked']
-                            mac_address = info['macAddress']
-                            if currently_tracked and 'mapHierarchyString' in info['mapInfo']:
+                            valid_device = False
+                            if location_api_extractor.deployment_type == 'On-premises':
+                                mac_address = info['macAddress']
+                                currently_tracked = info['currentlyTracked']
+                                valid_device = 'mapHierarchyString' in info['mapInfo'] and currently_tracked
                                 h = info['mapInfo']['mapHierarchyString']
                                 coord_x = info['mapCoordinate']['x']
                                 coord_y = info['mapCoordinate']['y']
                                 last_modified = info['statistics']['lastLocatedTime']
+                            elif location_api_extractor.deployment_type == 'Cloud' and location_api_extractor.demo:
+                                mac_address = info['mac']
+                                floor_name = info['floors']
+                                floor = None
+                                for f in floors:
+                                    if f.name == floor_name:
+                                        floor = f
+                                        break
+                                if floor:
+                                    h = floor.get_hierarchy()
+                                    coord_x, coord_y = __calculate_x_y_coordinates(floor, info['lat'], info['lng'])
+                                    valid_device = True
+                                    last_modified = info['seenString']
+                            if valid_device:
                                 location_info = __serialize_location_information(coord_x, coord_y, h, last_modified,
                                                                                  'static')
                                 user = db_session.query(RegisteredUser).filter(

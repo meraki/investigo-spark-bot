@@ -1,18 +1,48 @@
 {% extends "_base/base.html" %}
-{% block title %}Registered Users{% endblock %}
+{% block title %}Spark Stats{% endblock %}
 {% block style %}{% endblock %}
-{% block scripts %}{% endblock %}
-{% block subsection_title %}Spark Commands{% endblock %}
+{% block scripts %}
+<script src="{{url_for('static', filename='script/external/tablefilter/tablefilter.js')}}"></script>
+{% endblock %}
+{% block subsection_title %}Spark Stats{% endblock %}
 {% block subsection_subtitle %}{{object|length}} Commands{% endblock %}
 {% block content %}
-<div class="w3-left">
 
-    {% if object|length > 0%}
-        <ol>
-        {% for item in object %}
-            <li>{{ item.command_category }}</li>
-        {% endfor %}
-        </ol>
-    {% endif %}
-</div>
+{% if object|length > 0%}
+<table style="width:100%" class="my-table w3-left">
+    message_id, command_category, room_id, person_id, person_email, created, room_type, message_text, deployment_status
+    <thead>
+        <tr>
+            <th>Command</th>
+            <th>E-mail</th>
+            <th>Created</th>
+            <th>Room type</th>
+            <th>Deployment</th>
+        </tr>
+    </thead>
+    {% for item in object %}
+    <tbody>
+        <tr>
+            <td>{{ item.command_category }}</td>
+            <td>{{ item.person_email }}</td>
+            <td>{{ item.created }}</td>
+            <td>{{ item.room_type }}</td>
+            <td>{{ item.deployment_status }}</td>
+        </tr>
+     {% endfor %}
+    </tbody>
+</table>
+<script>
+
+var tf = new TableFilter(document.querySelector('.my-table'), {
+    base_path: '{{url_for("static", filename="script/external/tablefilter/")}}'
+});
+var tfConfig = {
+  rows_counter: {
+      target_id: 'subsection_subtitle'
+  }
+};
+tf.init();
+</script>
+{% endif %}
 {% endblock %}

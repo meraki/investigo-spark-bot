@@ -98,13 +98,19 @@ def home():
             output = command_open(message.roomId)
             command_category = 'open'
 
+        elif first_word.startswith('fix'):
+            output = command_fix(message_text, message.roomId)
+            #TODO add a command that grabs the first available client on the 'specified floor' (optional) and update to the specified asset name on the query
+            output = "Under construction"
+            command_category = 'fix'
+
         if not output:
             output = 'Command not identified'
             write_to_spark(room_id=room_id_received_on_message, text=output)
             command_category = 'unrecognized'
 
-
-        log_command(command_category, message.id, message.roomId, message.personId, message.personEmail, message.created, message.roomType, message_text, get_controller_status())
+        else:
+            log_command(command_category, message.id, message.roomId, message.personId, message.personEmail, message.created, message.roomType, message_text, get_controller_status())
 
 
     except Exception as e:
@@ -255,6 +261,58 @@ def command_open(room_id):
         write_to_spark(room_id, None, None, post_text, post_text, None)
 
     return post_text
+
+
+def command_fix(message_text, room_id):
+    try:
+        second_word = __replace_string_case_insensitive(message_text, 'fix', '').strip().lower()
+        post_markdown = None
+        post_text = None
+
+        user = db_session.query(RegisteredUser).filter(func.lower(RegisteredUser.name) == func.lower(second_word)).first()
+
+        if not user:
+            post_text = "I am sorry. I could not find any user named {}".format(second_word)
+
+        else:
+            mac = user.mac_address
+            user_name = user.name
+
+            if mac:
+                location = get_device_location(mac, True)
+                location = location['unknown_devices'] + location['registered_users']
+                # print location[0]
+                if len(location) > 0 and location[0]['location'] and location[0]['location']['hierarchy']:
+                    post_text = 'Device already found. No fix needed.'
+                else:
+                    devices = get_devices_divided_by_hierarchy()
+                    if devices and len(devices) > 0:
+                        for h in devices:
+                            if h['unknown_devices'] and len(h['unknown_devices']) > 0:
+                                target = h['unknown_devices'][0]
+                                break
+                    if target:
+                        user.mac_address = target['mac_address']
+                        post_text = "Updating {}'s MAC to {}. Current location: {}".format(user_name, mac, target['location']['hierarchy'])
+                    """if devices and len(devices) > 0 and len(devices['unknown_devices']) > 0:
+                        unknown_devices = devices['unknown_devices']
+                        target = unknown_devices[0]
+                        print target
+                    """
+
+            else:
+                post_text = 'Error! Please use a different name.'
+
+    except:
+        post_text = 'An unexpected error occurred. Please try again in a few moments.'
+        traceback.print_exc()
+    finally:
+        print ('Posting on Spark... {}'.format(post_text))
+        write_to_spark(room_id, None, None, post_text, post_text, None)
+
+    return post_text
+
+
 
 
 def command_find(message_text, room_id, person_id):
@@ -605,6 +663,3 @@ def plot_origin_and_destination_over_image(background_image_path, origin_x, orig
 
     relative_path = url_for('static', filename=file_path)
     return (local_path, relative_path)
-
-
-
