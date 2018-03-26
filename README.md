@@ -1,10 +1,12 @@
 # Investigo
 Investigo is Latin for track or trace out, investigate. Investigo is a bot for Spark, Cisco's unified communications service, which enables customers to use wireless infrastructure to locate Wi-Fi capable assets. The Investigo is a mash-up bot that uses several solutions: Spark, Tropo and Meraki wireless access points, spanning from the enterprise to the Internet of Things world.
 
-This project utilizes data provided by [http://live-map.meraki.com](http://live-map.meraki.com), which shows anonymized location information of Meraki employees in the HQ of the company.
+![Investigo architecture](https://raw.githubusercontent.com/rafael-carvalho/rafael-carvalho.github.io/master/investigo/architecture.png)
 
-There's a server running this project on [https://investigo-prod.herokuapp.com/](https://investigo-prod.herokuapp.com/)
-Here's a demo of the bot: [https://www.youtube.com/watch?v=5tSRDfU75w0](https://www.youtube.com/watch?v=5tSRDfU75w0)
+
+- This project utilizes data provided by [http://live-map.meraki.com](http://live-map.meraki.com), which shows anonymized location information of Meraki employees in the HQ of the company.
+- There's a server running this project on [https://investigo-prod.herokuapp.com/](https://investigo-prod.herokuapp.com/)
+- Here's a demo of the bot: [https://www.youtube.com/watch?v=5tSRDfU75w0](https://www.youtube.com/watch?v=5tSRDfU75w0)
 
 ### Features
 
