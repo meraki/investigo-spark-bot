@@ -20,7 +20,7 @@ Investigo is Latin for track or trace out, investigate. Investigo is a bot for S
 
 Available commands on Spark:
 * **list assets** (provides a list of registered assets)
-* **find asset***name of the asset* (locates the asset on the map)
+* **find asset** *name of the asset* (locates the asset on the map)
 * **find** *MAC Address* (find a wireless device using its MAC address)
 * **fix** *name of the asset* (updates the MAC address of the asset to an address that is currently being seen on the network)
 * **open** (gives a link to the web console of the app)
