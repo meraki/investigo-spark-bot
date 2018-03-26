@@ -237,7 +237,7 @@ def get_devices_divided_by_hierarchy(use_asynchronous_data=True, hierarchy=None)
                 if location_api_extractor:
                     clients_information = location_api_extractor.get_clients_list()
                     if location_api_extractor.deployment_type == 'Cloud' and location_api_extractor.demo:
-                        floors  = db_session.query(Floor).all()
+                        floors = db_session.query(Floor).all()
                     if clients_information:
                         for info in clients_information:
                             item = {}

@@ -1,6 +1,6 @@
 function plot(map_source, typeOneCoordinates, typeTwoCoordinates, floorWidth, floorHeight, floorLength, imgWidth, imgHeight) {
-	/*
 	console.log(map_source);
+	/*
 	console.log(typeOneCoordinates);
 	console.log(typeTwoCoordinates);
 	console.log("Floor width: " + floorWidth);

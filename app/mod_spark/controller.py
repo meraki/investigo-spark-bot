@@ -234,6 +234,8 @@ Here is a list of things I can do:
 + **list assets**: gives a list of registered assets;
 + **find asset _[asset_name]_**: finds the asset based on its name;
 + **find _[mac_address]_**: finds the asset based on its MAC Address;
++ **open**: gives a link to the web console of the app;
++ fix <name of the asset>: updates the MAC address of the asset to an address that is currently being seen on the network. - only valid for Meraki demo deployments 
 
 Examples:
 
@@ -241,7 +243,11 @@ Examples:
 
 > find asset defibrillator
 
-> find 00:00:2a:01:00:32        
+> find 00:00:2a:01:00:32
+
+> open
+
+> fix defibrillator        
 """
     finally:
         print ('Posting on Spark... {}'.format(post_text))

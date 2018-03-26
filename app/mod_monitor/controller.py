@@ -19,7 +19,7 @@ from flask import Blueprint, render_template, redirect, request, url_for
 
 from app.database import db_session
 from app.mod_api import controller as api_module
-from app import get_cmx_controller
+from app import get_controller
 from app.models import Floor
 
 mod_monitor = Blueprint('mod_monitor', __name__, url_prefix='/monitor')
@@ -27,9 +27,12 @@ mod_monitor = Blueprint('mod_monitor', __name__, url_prefix='/monitor')
 
 @mod_monitor.route('/overview/')
 def overview():
-    data = get_cmx_controller().get_hierarchies_serialized()
-    #print (json.dumps(data, indent=2))
-    return render_template('monitor/show/overview_show.html', data=data)
+    controller = get_controller()
+    if controller:
+        data = controller.get_hierarchies_serialized()
+        return render_template('monitor/show/overview_show.html', data=data)
+    else:
+        return redirect(url_for('mod_error.home', message='Controller not found'))
 
 
 @mod_monitor.route('/device/select', methods=['GET', 'POST'])

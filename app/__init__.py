@@ -120,6 +120,13 @@ def get_controller_status():
     return server
 
 
+def get_controller():
+    controller = get_cmx_controller()
+    if controller is None:
+        controller = get_meraki_controller()
+    return controller
+
+
 from app.models import CMXServer
 from app.mod_cmx_server.controller import mod_cmx_server as cmx_server_mod
 from app.mod_meraki_server.controller import mod_meraki_server as meraki_server_mod
