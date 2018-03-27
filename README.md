@@ -41,7 +41,7 @@ If you want to use it on your Meraki network, here are the steps:
         NOTIFICATION_SMS_PHONE_NUMBER=+12345678900
         SECRET_KEY=changethis
         SHOW_WEB_LINK=True
-        SPARK_TOKEN=get your token from https://developer.ciscospark.com```
+        SPARK_TOKEN=get your token from https://developer.ciscospark.com ```
 
 1. Run your server:
 ``` python run.py ```
