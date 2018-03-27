@@ -50,10 +50,10 @@ If you want to use it on your Meraki network, here are the steps:
 1. This server needs to be accessible from the Internet. If you don't have a public IP:
     - You can use http://ngrok.com for to expose your localhost to the Internet.
     - Alternatively, you can host your app on Heroku. ProcFile provided on the github repository
-1. Go to your code and change [`web/externalapis/meraki/__init__.py](externalapis/meraki/__init__.py) to point to the server you created on step 1.
+1. Go to your code and change [`web/externalapis/meraki/__init__.py`](externalapis/meraki/__init__.py) to point to the server you created on step 1.
 1. Add a JSON file describing your location to the same folder as [app/static/server_config/meraki/meraki-hq-san-francisco.json](app/static/server_config/meraki/meraki-hq-san-francisco.json) and change the file path on the same file of the previous step. Don't worry about the id's on this file.
 1. Setup the server:
-    - Use a browser to go to your server's homepage: ```https://public-ip.com```
+    - Use a browser to go to your server's homepage: `https://public-ip.com`
     - Click settings on the top menu
     - Select cloud as your deployment mode
     - Add a cloud server
