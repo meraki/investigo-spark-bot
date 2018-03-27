@@ -34,14 +34,16 @@ If you want to use it on your Meraki network, here are the steps:
 1. Configure your server settings:
     - Install all libraries described on requirements.txt.
     - Make sure you have a PostgreSQL server running.
-    - Make sure you change all environmental variables on the .env file
-        ```- ADMIN_NAME=admin's name on Spark
+    - Make sure you change all environmental variables on the .env file:
+        ```
+        ADMIN_NAME=admin's name on Spark
         APP_SETTINGS=config.DevelopmentConfig
         DATABASE_URL=postgres://...
         NOTIFICATION_SMS_PHONE_NUMBER=+12345678900
         SECRET_KEY=changethis
         SHOW_WEB_LINK=True
-        SPARK_TOKEN=get your token from https://developer.ciscospark.com ```
+        SPARK_TOKEN=get your token from https://developer.ciscospark.com 
+        ```
 
 1. Run your server:
 ``` python run.py ```
