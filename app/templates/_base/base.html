@@ -48,7 +48,8 @@ $(document).ready(function(){
        },
        success: function(msg){
 
-         changeNavBarColor(msg.server_type);
+         adaptToCloudEnvironment(msg.server_type);
+
 
        },
        fail: function(msg) {
@@ -56,17 +57,20 @@ $(document).ready(function(){
        }
     });
 
-    function changeNavBarColor(value) {
+    function adaptToCloudEnvironment(value) {
         console.log(value);
 
         var color = 'blue';
-
+        var showHideableItems = false;
         if (value == 'On-premises') {
             color = 'black';
+            showHideableItems = true;
         } else if (value == 'Cloud') {
             color = 'green';
+            showHideableItems = false;
         } else {
             color = 'gray';
+            showHideableItems = true;
         }
 
         $(".w3-navbar").each(function( index ) {
@@ -74,6 +78,15 @@ $(document).ready(function(){
           $(this).removeClass('w3-green');
           $(this).removeClass('w3-gray');
           $(this).addClass('w3-' + color);
+
+
+        });
+        $(".meraki-hide").each(function( index ) {
+            if (showHideableItems) {
+                $(this).show();
+            } else {
+               $(this).hide();
+            }
         });
     }
 });

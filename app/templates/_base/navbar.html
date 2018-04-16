@@ -4,10 +4,10 @@
         <a class="w3-padding-large" href="javascript:void(0)" onclick="myFunction()" title="Toggle Navigation Menu"><i class="fa fa-bars"></i></a>
     </li>
     <li><a href="{{url_for('index')}}" class="w3-hover-none w3-hover-text-grey w3-padding-large">HOME</a></li>
-    <li class="w3-hide-small"><a href="{{url_for('mod_monitor.overview')}}" class="w3-padding-large">OVERVIEW</a></li>
-    <li class="w3-hide-small"><a href="{{url_for('mod_monitor.device_select')}}" class="w3-padding-large">DEVICE</a></li>
-    <li class="w3-hide-small"><a href="{{url_for('mod_monitor.hierarchy_select')}}" class="w3-padding-large">HIERARCHY</a></li>
-    <li class="w3-hide-small w3-dropdown-hover">
+    <li class="w3-hide-small meraki-hide"  ><a href="{{url_for('mod_monitor.overview')}}" class="w3-padding-large">OVERVIEW</a></li>
+    <li class="w3-hide-small meraki-hide"><a href="{{url_for('mod_monitor.device_select')}}" class="w3-padding-large">DEVICE</a></li>
+    <li class="w3-hide-small meraki-hide"><a href="{{url_for('mod_monitor.hierarchy_select')}}" class="w3-padding-large">HIERARCHY</a></li>
+    <li class="w3-hide-small w3-dropdown-hover meraki-hide">
     <a href="javascript:void(0)" class="w3-hover-none w3-padding-large" title="More">ENGAGEMENT <i class="fa fa-caret-down"></i></a>
     <div class="w3-dropdown-content w3-white w3-card-4">
       <a href="{{url_for('mod_engagement.engagement_screen_select')}}">SCREEN</a>
@@ -17,7 +17,7 @@
     </div>
   </li>
     <li class="w3-hide-small"><a href="{{url_for('mod_user.show')}}" class=" w3-padding-large">USERS</a></li>
-    <li class="w3-hide-small"><a href="{{url_for('mod_simulation.add')}}" class=" w3-padding-large">SIMULATION</a></li>
+    <li class="w3-hide-small meraki-hide"><a href="{{url_for('mod_simulation.add')}}" class=" w3-padding-large">SIMULATION</a></li>
     <li class="w3-hide-small"><a href="{{url_for('mod_server.select')}}" class=" w3-padding-large">SETTINGS</a></li>
 </ul>
 </div>
@@ -25,12 +25,12 @@
 <!-- Navbar on small screens -->
 <div id="navDemo" class="w3-hide w3-hide-large w3-hide-medium w3-top" style="margin-top:46px">
   <ul class="w3-navbar w3-left-align">
-    <li><a class="w3-padding-large" href="{{url_for('mod_monitor.overview')}}">OVERVIEW</a></li>
+    <li><a class="w3-padding-large meraki-hide" href="{{url_for('mod_monitor.overview')}}">OVERVIEW</a></li>
       <li><a class="w3-padding-large" href="{{url_for('mod_monitor.device_select')}}">DEVICE</a></li>
-      <li><a class="w3-padding-large" href="{{url_for('mod_monitor.hierarchy_select')}}">HIERARCHY</a></li>
-    <li><a class="w3-padding-large" href="{{url_for('mod_engagement.home')}}">ENGAGEMENT</a></li>
-    <li><a class="w3-padding-large" href="{{url_for('mod_user.show')}}">USERS</a></li>
-    <li><a class="w3-padding-large" href="{{url_for('mod_simulation.add')}}">SIMULATION</a></li>
+      <li><a class="w3-padding-large meraki-hide" href="{{url_for('mod_monitor.hierarchy_select')}}">HIERARCHY</a></li>
+    <li><a class="w3-padding-large meraki-hide" href="{{url_for('mod_engagement.home')}}">ENGAGEMENT</a></li>
+    <li><a class="w3-padding-large " href="{{url_for('mod_user.show')}}">USERS</a></li>
+    <li><a class="w3-padding-large meraki-hide" href="{{url_for('mod_simulation.add')}}">SIMULATION</a></li>
       <li><a class="w3-padding-large" href="{{url_for('mod_server.select')}}">SETTINGS</a></li>
   </ul>
 </div>
