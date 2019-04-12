@@ -6,7 +6,7 @@ Flask-SQLAlchemy==2.1
 future==0.16.0
 gunicorn==19.6.0
 itsdangerous==0.24
-Jinja2==2.7.3
+Jinja2 ~> 2.10.1
 Mako==1.0.4
 MarkupSafe==0.23
 numpy==1.11.2
