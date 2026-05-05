@@ -13,7 +13,7 @@ numpy==1.22.0
 plotly==6.7.0
 psycopg2==2.6.2
 pyparsing==3.3.2
-python-dateutil==2.6.0
+python-dateutil==2.9.0.post0
 python-editor==1.0.4
 pytz==2016.7
 requests>=2.33.1
