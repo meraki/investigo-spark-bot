@@ -21,5 +21,5 @@ requests-cache==0.4.12
 requests-toolbelt==0.7.0
 six==1.10.0
 SQLAlchemy==1.1.2
-Werkzeug==0.11.11
+Werkzeug==3.1.6
 xmltodict==0.10.2
